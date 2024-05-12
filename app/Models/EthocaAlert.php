@@ -11,6 +11,7 @@ class EthocaAlert extends Model
     use HasFactory;
     protected $table = 'ethoca_alerts';
 
+    protected $guarded = [];
     /**
      * Get the ethoca alert response that owns the ethoca alert.
      *
