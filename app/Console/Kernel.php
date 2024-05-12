@@ -15,13 +15,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->everyFiveSeconds()->output();
-        $schedule->command('echo hello')->everyFiveSeconds();
-        $schedule->call(
-            function () {
-                $response = Http::get('http://localhost:8000');
-
-            }
-        )->appendOutputTo('scheduler-output.log');
+        // $schedule->command('echo hello')->everyFiveSeconds();
+        // $schedule->call(
+        //     function () {
+        //         $response = Http::get('http://localhost:8000');
+        //         echo $response->json();
+        //     }
+        // )->appendOutputTo('scheduler-output.log');
+        $schedule->command('app:make-http-request')->everyFiveSeconds()->appendOutputTo('test.log');
 
     }
 
