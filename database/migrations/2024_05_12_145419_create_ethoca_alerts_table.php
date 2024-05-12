@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\EthocaAlertResponse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,8 +13,9 @@ return new class extends Migration
     {
         Schema::create('ethoca_alerts', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(EthocaAlertResponse::class)->comment('Associated Response ID');
             $table->string('ethoca_id', 25)->comment('Ethoca generated unique ID for the alert');
-            $table->string('type',30)->comment('The alert type: sourced from issuer/cardscheme or dispute');
+            $table->string('type', 30)->comment('The alert type: sourced from issuer/cardscheme or dispute');
             $table->dateTime('alert_timestamp')->comment('The date and time the alert was available to send in the member’s time zone');
             $table->string('age', 50)->comment('Numeric age of the alert. It is the number of hours between the transaction date/time (authorisation date/time) and the AlertTimestamp');
             $table->string('issuer', 100)->comment('The name of the card issuer');
