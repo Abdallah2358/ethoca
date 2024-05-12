@@ -10,11 +10,8 @@ class EthocaAlertError extends Model
 {
     use HasFactory;
     protected $table = 'ethoca_alert_errors';
-    protected $fillable = [
-        'ethoca_alert_response_id',
-        'code',
-        'description'
-    ];
+    protected $guarded = [];
+
     /**
      * Get the ethoca alert response that owns the ethoca alert error.
      *
@@ -23,5 +20,5 @@ class EthocaAlertError extends Model
     {
         return $this->belongsTo(EthocaAlertResponse::class);
     }
-    
+
 }

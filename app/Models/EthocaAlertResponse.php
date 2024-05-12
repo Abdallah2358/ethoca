@@ -10,16 +10,13 @@ class EthocaAlertResponse extends Model
 {
     use HasFactory;
     protected $table = 'ethoca_alert_responses';
-    protected $fillable = [
-        'major_code',
-        'status',
-        'number_of_alerts'
-    ];
+    protected $guarded = [];
+
     /**
      * Get the ethoca alerts for the ethoca alert response.
      *
      */
-    public function ethocaAlerts() : HasMany
+    public function ethocaAlerts(): HasMany
     {
         return $this->hasMany(EthocaAlert::class);
     }
@@ -28,7 +25,7 @@ class EthocaAlertResponse extends Model
      * Get the ethoca alert errors for the ethoca alert response.
      *
      */
-    public function ethocaAlertErrors() : HasMany
+    public function ethocaAlertErrors(): HasMany
     {
         return $this->hasMany(EthocaAlertError::class);
     }
