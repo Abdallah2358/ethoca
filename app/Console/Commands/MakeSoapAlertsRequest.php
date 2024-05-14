@@ -32,14 +32,15 @@ class MakeSoapAlertsRequest extends Command
     public function handle()
     {
         // start connection
-        $phpFilePath = env('ETHOCA_WSDL_URL', public_path("EthocaAlerts-Sandbox.wsdl"));
+        $phpFilePath = public_path("EthocaAlerts-Sandbox.wsdl");
+        $this->info('pub path : ' . $phpFilePath);
         $client = new \SoapClient($phpFilePath);
         $creds = array(["Username" => env('ETHOCA_USERNAME'), "Password" => env('ETHOCA_PASSWORD')]);
 
         // call Ethoca360Alerts
         $alert_response = $client->__soapCall("Ethoca360Alerts", $creds, ["trace" => true, "_connection_timeout" => 180]);
         // log response to console
-        $this->info(json_encode($alert_response));
+        // $this->info(json_encode($alert_response));
 
         // store response in db
         $alert_res_model = EthocaAlertResponse::create([
@@ -51,13 +52,17 @@ class MakeSoapAlertsRequest extends Command
         // if it is saved successfully
         if ($alert_res_model->id) {
             // save all errors to database
-            foreach ($alert_response->Errors as $error) {
-                EthocaError::create([
-                    'model' => EthocaAlertResponse::class,
-                    'model_id' => $alert_res_model->id,
-                    'code' => $error->code,
-                    'description' => $error->_,
-                ]);
+            if (isset($alert_response->Errors) && isset($alert_response->Errors->Error)) {
+                // $this->info(json_encode($alert_response->Errors->Error));
+                # code...
+                foreach ($alert_response->Errors->Error as $error) {
+                    EthocaError::create([
+                        'model' => EthocaAlertResponse::class,
+                        'model_id' => $alert_res_model->id,
+                        'code' => $error->code,
+                        'description' => $error->_,
+                    ]);
+                }
             }
 
             // if the call is successful store all alerts in database
