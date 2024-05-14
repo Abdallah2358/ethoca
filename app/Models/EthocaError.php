@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class EthocaError extends Model
 {
     use HasFactory;
+    protected $guarded = [];
     public function error_origin(): BelongsTo
     {
         return $this->belongsTo($this->model, $this->model_id);

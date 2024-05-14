@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('ethoca_errors', function (Blueprint $table) {
             $table->id();
             $table->string('model')->comment('The model that the error is associated with');
-            $table->bigInteger('model_id');
+            $table->bigInteger('model_id')->comment('The id associated with the model related to this error');
             $table->string('code', 10)->comment('The error code returned by Ethoca');
             $table->string('description', 255)->comment('The error message returned by Ethoca');
             $table->timestamps();
