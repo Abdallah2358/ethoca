@@ -2,6 +2,8 @@
 
 use App\Models\EthocaAlert;
 use App\Models\EthocaAlertResponse;
+use App\Models\EthocaRequest;
+use App\Models\EthocaResponse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,10 +18,12 @@ return new class extends Migration {
             $table->id();
             // update related felids
             $table->foreignIdFor(EthocaAlert::class)->comment('The alert id');
+            $table->foreignIdFor(EthocaRequest::class)->comment('The request id that is used to send this update');
+            $table->foreignIdFor(EthocaResponse::class)->comment('The Response id that is used to updated this alert_update status');
+
             // redundant field as we can get the alert id from the alert model
             // but it is used to reduce the number of queries since time is more important than space
             $table->string('ethoca_id', 25)->comment('The Ethoca ID')->nullable()->default(null)->index();
-
             $table->string('outcome', 50)->comment('The outcome of the alert')->index();
             $table->string('refunded', 50)->comment('The refunded amount')->index(); // can be refactored to tiny int
             $table->boolean('first_party_fraud')->comment('The first party fraud amount')->index();

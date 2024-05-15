@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\EthocaAlertResponse;
+use App\Models\EthocaResponse;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('ethoca_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EthocaAlertResponse::class)->comment('Associated Response ID');
+            $table->foreignIdFor(EthocaResponse::class)->comment('Associated Response ID');
             $table->mediumInteger('crm_transaction_id')->comment('CRM Transaction ID')->index()->nullable()->default(null);
             $table->boolean('is_handled')->comment('This flag is raised when the CRM is done handling this alert and waiting update')->index()->default(0);
             $table->boolean('is_updated')->comment('This flag is raised when the alert is successfully state updated with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
