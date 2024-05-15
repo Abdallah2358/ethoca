@@ -20,4 +20,34 @@ class EthocaAlert extends Model
     {
         return $this->belongsTo(EthocaAlertResponse::class);
     }
+    public static function mapAlertResponse($alert): EthocaAlert
+    {
+        $eth_alert = new EthocaAlert();
+        $eth_alert->ethoca_id = $alert->EthocaID;
+        $eth_alert->type = $alert->Type;
+        $eth_alert->alert_timestamp = $alert->AlertTimestamp;
+        $eth_alert->issuer = $alert->Issuer;
+        $eth_alert->card_number = $alert->CardNumber;
+        $eth_alert->card_bin = $alert->CardBIN;
+        $eth_alert->card_last4 = $alert->CardLast4;
+        $eth_alert->arn = $alert->ARN;
+        $eth_alert->transaction_timestamp = $alert->TransactionTimestamp;
+        $eth_alert->merchant_descriptor = $alert->MerchantDescriptor;
+        $eth_alert->member_id = $alert->MemberID;
+        $eth_alert->mcc = $alert->MCC;
+        $eth_alert->amount = $alert->Amount;
+        $eth_alert->currency = $alert->Currency;
+        $eth_alert->transaction_type = $alert->TransactionType;
+        $eth_alert->initiated_by = $alert->InitiatedBy;
+        $eth_alert->is_3d_secure = $alert->Is3DSecure;
+        $eth_alert->source = $alert->Source;
+        $eth_alert->auth_code = $alert->AuthCode;
+        $eth_alert->merchant_member_name = $alert->MerchantMemberName;
+        $eth_alert->ethoca_transaction_id = $alert->TransactionId;
+        $eth_alert->chargeback_reason_code = $alert->ChargebackReasonCode;
+        $eth_alert->chargeback_amount = $alert->ChargebackAmount;
+        $eth_alert->chargeback_currency = $alert->ChargebackCurrency;
+        return $eth_alert;
+    }
+
 }
