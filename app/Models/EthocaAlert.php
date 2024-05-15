@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EthocaAlert extends Model
 {
@@ -16,10 +17,28 @@ class EthocaAlert extends Model
      * Get the ethoca alert response that owns the ethoca alert.
      *
      */
-    public function ethocaAlertResponse(): BelongsTo
+    public function ethocaResponse(): BelongsTo
     {
-        return $this->belongsTo(EthocaAlertResponse::class);
+        return $this->belongsTo(EthocaResponse::class);
     }
+
+    public function ethocaAcknowledgement(): HasMany
+    {
+        return $this->hasMany(EthocaAcknowledgement::class);
+    }
+
+    public function ethocaUpdate(): HasMany
+    {
+        return $this->hasMany(EthocaUpdate::class);
+    }
+
+    
+
+
+
+
+
+
     public static function mapAlertResponseToRecord($alert): EthocaAlert
     {
         $eth_alert = new EthocaAlert();
