@@ -14,10 +14,11 @@ return new class extends Migration {
         Schema::create('ethoca_alerts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(EthocaAlertResponse::class)->comment('Associated Response ID');
-            $table->mediumInteger('crm_transaction_id')->comment('CRM Transaction ID');
-            $table->boolean('is_handled')->comment('This flag is raised when the CRM is done handling this alert and waiting update');
-            $table->boolean('is_updated')->comment('This flag is raised when the alert is successfully state updated with ethoca'); # TODO : Check if it needs to be an enum instead
-            $table->string('ethoca_id', 25)->comment('Ethoca generated unique ID for the alert');
+            $table->mediumInteger('crm_transaction_id')->comment('CRM Transaction ID')->index()->nullable()->default(null);
+            $table->boolean('is_handled')->comment('This flag is raised when the CRM is done handling this alert and waiting update')->index()->default(0);
+            $table->boolean('is_updated')->comment('This flag is raised when the alert is successfully state updated with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
+            $table->boolean('is_ack')->comment('This flag is raised when the alert is successfully Acknowledged with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
+            $table->string('ethoca_id', 25)->comment('Ethoca generated unique ID for the alert')->index()->nullable()->default(null);
             $table->string('type', 30)->comment('The alert type: sourced from issuer/cardscheme or dispute');
             $table->dateTime('alert_timestamp')->comment('The date and time the alert was available to send in the member’s time zone');
             $table->string('age', 50)->comment('Numeric age of the alert. It is the number of hours between the transaction date/time (authorisation date/time) and the AlertTimestamp');
@@ -41,7 +42,9 @@ return new class extends Migration {
             $table->string('ethoca_transaction_id', 65)->comment('A unique reference number must be flowed throughout the lifecycle of all card transactions.');
             $table->string('chargeback_reason_code', 30)->comment('The card scheme-specific chargeback reason code which indicates the cardholder’s reason for disputing the transaction.');
             $table->decimal('chargeback_amount', 10, 2)->comment('Chargeback Amount');
-            $table->string('chargeback_currency', 3)->comment('Currency for the chargeback amount.');
+            $table->string('chargeback_currency', 3)->comment('Currency for the chargeback currency.');
+
+
             $table->timestamps();
         });
     }
