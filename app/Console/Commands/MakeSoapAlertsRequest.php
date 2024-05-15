@@ -68,7 +68,7 @@ class MakeSoapAlertsRequest extends Command
             // if the call is successful store all alerts in database
             if ($alert_response->majorCode == 0) {
                 foreach ($alert_response->Alerts as $alert) {
-                    $ethoca_alert= EthocaAlert::mapAlertResponse($alert);
+                    $ethoca_alert= EthocaAlert::mapAlertResponseToRecord($alert);
                     $ethoca_alert->save();
                     // TODO : Check this in testing to make sure they match
                 }
