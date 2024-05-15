@@ -12,7 +12,7 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('ethoca_alert_updates', function (Blueprint $table) {
+        Schema::create('ethoca_updates', function (Blueprint $table) {
             $table->id();
             // update related felids
             $table->foreignIdFor(EthocaAlert::class)->comment('The alert id');
