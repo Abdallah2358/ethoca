@@ -20,7 +20,7 @@ class EthocaAlert extends Model
     {
         return $this->belongsTo(EthocaAlertResponse::class);
     }
-    public static function mapAlertResponse($alert): EthocaAlert
+    public static function mapAlertResponseToRecord($alert): EthocaAlert
     {
         $eth_alert = new EthocaAlert();
         $eth_alert->ethoca_id = $alert->EthocaID;
@@ -50,4 +50,33 @@ class EthocaAlert extends Model
         return $eth_alert;
     }
 
+    function mappAlertRecordToRequest()
+    {
+        return [
+            'EthocaID' => $this->ethoca_id,
+            'Type' => $this->type,
+            'AlertTimestamp' => $this->alert_timestamp,
+            'Issuer' => $this->issuer,
+            'CardNumber' => $this->card_number,
+            'CardBIN' => $this->card_bin,
+            'CardLast4' => $this->card_last4,
+            'ARN' => $this->arn,
+            'TransactionTimestamp' => $this->transaction_timestamp,
+            'MerchantDescriptor' => $this->merchant_descriptor,
+            'MemberID' => $this->member_id,
+            'MCC' => $this->mcc,
+            'Amount' => $this->amount,
+            'Currency' => $this->currency,
+            'TransactionType' => $this->transaction_type,
+            'InitiatedBy' => $this->initiated_by,
+            'Is3DSecure' => $this->is_3d_secure,
+            'Source' => $this->source,
+            'AuthCode' => $this->auth_code,
+            'MerchantMemberName' => $this->merchant_member_name,
+            'TransactionId' => $this->ethoca_transaction_id,
+            'ChargebackReasonCode' => $this->chargeback_reason_code,
+            'ChargebackAmount' => $this->chargeback_amount,
+            'ChargebackCurrency' => $this->chargeback_currency,
+        ];
+    }
 }
