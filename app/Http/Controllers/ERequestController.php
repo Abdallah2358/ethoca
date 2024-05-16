@@ -17,6 +17,6 @@ class ERequestController extends Controller
     function show($id)
     {
 
-        return view('requests.show', ['request' => EthocaRequest::find($id)]);
+        return view('requests.show', ['request' => EthocaRequest::findOrFail($id)]);
     }
 }

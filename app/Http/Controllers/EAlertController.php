@@ -16,6 +16,6 @@ class EAlertController extends Controller
     }
     function show($id)
     {
-        return view('alerts.show', ['alert' => EthocaAlert::find($id)]);
+        return view('alerts.show', ['alert' => EthocaAlert::findOrFail($id)]);
     }
 }
