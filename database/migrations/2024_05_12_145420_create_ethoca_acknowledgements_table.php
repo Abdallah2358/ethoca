@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->foreignIdFor(EthocaAlert::class)->comment('Alert id that this acknowledgement is related to');
             $table->foreignIdFor(EthocaRequest::class)->comment('Request id that is sent this acknowledgement to ethoca');
             $table->foreignIdFor(EthocaResponse::class)->comment('Response id that is confirmed this acknowledgement to status');
+            $table->string('ethoca_id', 25)->comment('Ethoca id of the acknowledgement')->nullable()->index();
             $table->string('status')->comment('Status of the acknowledgement');
             $table->timestamps();
         });
