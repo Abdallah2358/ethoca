@@ -1,4 +1,3 @@
-<h1>Hello from indx </h1>
 <table style="text-align: center" border="1">
     <thead>
         <th>id</th>
