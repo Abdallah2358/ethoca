@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\EAlertController;
 use App\Http\Controllers\ERequestController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,4 @@ Route::get('/', function () {
     return response(['message' => 'hello']);
 });
 Route::resource('requests', ERequestController::class);
+Route::resource('alerts', EAlertController::class);
