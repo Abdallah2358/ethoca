@@ -13,24 +13,61 @@ class EthocaRequest extends Model
     protected $table = 'ethoca_requests';
     protected $guarded = [];
 
-    public function ethocaResponse() : HasOne
+    public function ethocaResponse(): HasOne
     {
         return $this->hasOne(EthocaResponse::class);
     }
 
-    public function ethocaAlerts() : HasMany
+    public function ethocaAlerts(): HasMany
     {
         return $this->hasMany(EthocaAlert::class);
     }
 
-    public function ethocaAcknowledgements() : HasMany
+    public function ethocaAcknowledgements(): HasMany
     {
         return $this->hasMany(EthocaAcknowledgement::class);
     }
 
-    public function ethocaUpdates() : HasMany
+    public function ethocaUpdates(): HasMany
     {
         return $this->hasMany(EthocaUpdate::class);
     }
 
+    public static function generateRequest(\SoapClient $client, $ethoc_function, $ethoca_args, $start = null, $end = null): mixed
+    {
+        $title = 'Ethoca 360 Alerts Request';
+        $alert_type = null;
+        switch ($ethoc_function) {
+            case 'Ethoca360Alerts':
+                $title = 'Ethoca 360 Alerts Request';
+                $alert_type = $ethoca_args['AlertType'] ?? 'all'; // default to 'all
+                break;
+            case 'EthocaAlertAcknowledgement':
+                $title = 'Acknowledge Ethoca Alerts Request';
+                break;
+            case 'Ethoca360AlertsUpdate':
+                $title = 'Update Ethoca Alerts Request';
+                break;
+        }
+        $ethoca_request = EthocaRequest::create([
+            'title' => $title,
+            'alert_type' => $alert_type, // default to 'all
+            'search_start_date' => $ethoca_args['SearchStartDate'] ?? null,
+            'search_end_date' => $ethoca_args['SearchEndDate'] ?? null,
+        ]);
+        $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
+        // save all errors to database
+        if (isset($response->Errors) && isset($response->Errors->Error)) {
+            foreach ($response->Errors->Error as $error) {
+                EthocaError::create([
+                    'model' => EthocaRequest::class,
+                    'model_id' => $ethoca_request->id,
+                    'code' => $error->code,
+                    'description' => $error->_,
+                ]);
+            }
+        }
+        $response['ethoca_request_id'] = $ethoca_request->id;
+        return $response;
+    }
 }
