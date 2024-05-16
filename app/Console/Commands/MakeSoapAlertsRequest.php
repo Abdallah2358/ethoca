@@ -115,17 +115,21 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             case 'Ethoca360Alerts':
                 $title = 'Ethoca 360 Alerts Request';
                 $alert_type = $ethoca_args['AlertType'] ?? 'all'; // default to 'all
+                $ethoca_fun_code = 1;
                 break;
             case 'EthocaAlertAcknowledgement':
                 $title = 'Acknowledge Ethoca Alerts Request';
+                $ethoca_fun_code = 2;
                 break;
             case 'Ethoca360AlertsUpdate':
                 $title = 'Update Ethoca Alerts Request';
+                $ethoca_fun_code = 3;
                 break;
         }
         $ethoca_request = EthocaRequest::create([
             'title' => $title,
             'alert_type' => $alert_type, // default to 'all
+            'ethoca_fun_code' => $ethoca_fun_code,
             'search_start_date' => $ethoca_args['SearchStartDate'] ?? null,
             'search_end_date' => $ethoca_args['SearchEndDate'] ?? null,
         ]);
