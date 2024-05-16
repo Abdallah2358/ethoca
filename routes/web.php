@@ -20,3 +20,7 @@ Route::get('/', function () {
 });
 Route::resource('requests', ERequestController::class);
 Route::resource('alerts', EAlertController::class);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
