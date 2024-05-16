@@ -12,6 +12,11 @@ class EthocaRequest extends Model
     use HasFactory;
     protected $table = 'ethoca_requests';
     protected $guarded = [];
+    protected $appends = ['errors'];
+    public function getErrorsAttribute(): array
+    {
+        return EthocaError::where('model', self::class)->where('model_id', $this->id)->get()->toArray();
+    }
 
     public function ethocaResponse(): HasOne
     {
