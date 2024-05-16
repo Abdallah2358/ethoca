@@ -18,7 +18,7 @@ class EthocaError extends Model
     public static function generateErrorsFromResponse($response, $model)
     {
         $errors = [];
-        if (isset($response->Errors) && isset($response->Errors->Error)) {
+        if (isset($response->Errors) && is_array($response->Errors->Error)) {
             foreach ($response->Errors->Error as $error) {
 
                 $error_record = EthocaError::create([
@@ -29,6 +29,14 @@ class EthocaError extends Model
                 ]);
                 array_push($errors, $error_record);
             }
+        } else {
+            $error_record = EthocaError::create([
+                'model' => get_class($model),
+                'model_id' => $model->id,
+                'code' => $response->Errors->Error->code,
+                'description' => $response->Errors->Error->_,
+            ]);
+            array_push($errors, $error_record);
         }
         return $errors;
     }

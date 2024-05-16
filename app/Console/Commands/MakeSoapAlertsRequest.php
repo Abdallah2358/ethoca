@@ -38,7 +38,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
         // start connection
         $phpFilePath = public_path("EthocaAlerts-Sandbox.wsdl");
         $client = new \SoapClient($phpFilePath);
-        $count = $this->ask('How many times do you want to retry the request?');
+        $count = $this->ask('How many times do you want to retry the request?', 1);
         $time_interval = $this->confirm('Do you wish to have time interval? ');
         $ethoca_args = array(["Username" => env('ETHOCA_USERNAME'), "Password" => env('ETHOCA_PASSWORD')]);
         if ($time_interval) {
@@ -57,6 +57,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
                 'major_code' => $alert_response->majorCode,
                 'status' => $alert_response->Status,
                 'number_of_alerts' => $alert_response->numberOfAlerts ?? 0,
+                'ethoca_request_id' => $alert_response->ethoca_request_id ?? null,
             ]);
 
             // if it is saved successfully
@@ -130,7 +131,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
         ]);
         $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
         // save all errors to database
-        if (isset($response->Errors) && isset($response->Errors->Error)) {
+        if (isset($response->Errors) && is_array($response->Errors->Error)) {
             foreach ($response->Errors->Error as $error) {
                 EthocaError::create([
                     'model' => EthocaRequest::class,
@@ -139,8 +140,15 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
                     'description' => $error->_,
                 ]);
             }
+        } else {
+            EthocaError::create([
+                'model' => EthocaRequest::class,
+                'model_id' => $ethoca_request->id,
+                'code' => $response->Errors->Error->code,
+                'description' => $response->Errors->Error->_,
+            ]);
         }
-        $response['ethoca_request_id'] = $ethoca_request->id;
+        $response->ethoca_request_id = $ethoca_request->id;
         return $response;
     }
 }
