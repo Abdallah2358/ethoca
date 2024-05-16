@@ -34,10 +34,7 @@ class EthocaAlert extends Model
         return $this->hasMany(EthocaUpdate::class);
     }
 
-    public function errors(): array
-    {
-        return EthocaError::where('model', self::class)->where('model_id', $this->id)->get()->toArray();
-    }
+
 
 
     public static function mapAlertResponseToRecord($alert): EthocaAlert
