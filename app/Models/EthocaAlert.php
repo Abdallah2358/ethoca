@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasError;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EthocaAlert extends Model
 {
-    use HasFactory;
+    use HasFactory, HasError;
     protected $table = 'ethoca_alerts';
 
     protected $guarded = [];
+
     /**
      * Get the ethoca alert response that owns the ethoca alert.
      *
@@ -32,11 +34,10 @@ class EthocaAlert extends Model
         return $this->hasMany(EthocaUpdate::class);
     }
 
-    
-
-
-
-
+    public function errors(): array
+    {
+        return EthocaError::where('model', self::class)->where('model_id', $this->id)->get()->toArray();
+    }
 
 
     public static function mapAlertResponseToRecord($alert): EthocaAlert

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasError;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,14 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class EthocaRequest extends Model
 {
-    use HasFactory;
+    use HasFactory, HasError;
     protected $table = 'ethoca_requests';
     protected $guarded = [];
-    protected $appends = ['errors'];
-    public function getErrorsAttribute(): array
-    {
-        return EthocaError::where('model', self::class)->where('model_id', $this->id)->get()->toArray();
-    }
 
     public function ethocaResponse(): HasOne
     {

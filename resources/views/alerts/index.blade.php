@@ -33,6 +33,7 @@
         <th>chargeback_currency</th>
         <th>created_at</th>
         <th>updated_at</th>
+        <th>errors</th>
     </thead>
     <tbody>
         @foreach ($alerts as $alert)
@@ -74,6 +75,7 @@
                 <td>{{ $alert->chargeback_currency }}</td>
                 <td>{{ $alert->created_at }}</td>
                 <td>{{ $alert->updated_at }}</td>
+                <td>{{ count($alert->errors) }}</td>
             </tr>
         @endforeach
     </tbody>
