@@ -12,6 +12,7 @@ use App\Models\EthocaResponse;
 use Illuminate\Console\Command;
 
 use Illuminate\Contracts\Console\PromptsForMissingInput;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Http;
 
 class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
@@ -53,53 +54,67 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             $alert_response = $this->generateRequest($client, 'Ethoca360Alerts', $ethoca_args);
             // store response in db
             $count = ($alert_response->majorCode == 0 && $alert_response->Status == 'Success') ? 0 : $count; // if the call is successful stop the loop
-            $alert_res_model = EthocaResponse::create([
-                'major_code' => $alert_response->majorCode,
-                'status' => $alert_response->Status,
-                'number_of_alerts' => $alert_response->numberOfAlerts ?? 0,
-                'ethoca_request_id' => $alert_response->ethoca_request_id ?? null,
-            ]);
-
             // if it is saved successfully
-            if ($alert_res_model->id) {
+            $saved_alerts = collect([]);
+            if (isset($alert_response->model) && isset($alert_response->model->id)) {
                 // if the call is successful store all alerts in database
                 if ($alert_response->majorCode == 0) {
                     foreach ($alert_response->Alerts as $alert) {
                         $ethoca_alert = EthocaAlert::mapAlertResponseToRecord($alert);
-                        $ethoca_alert->save();
+                        if ($ethoca_alert->save()) {
+                            $saved_alerts->push($ethoca_alert);
+                        }
                     }
-
                     // Now Start Acklogment of Received Alerts
                     // chunk the alerts to 24 sized arrays to follow ethoca docs
-                    foreach (array_chunk($alert_response->Alerts, 24, true) as $alertsArray) {
+                    foreach ($$saved_alerts->chunk(24) as $alertsArray) {
+                        // $alerts_collection = collect($alertsArray);
                         foreach ($alertsArray as $alerts) {
-                            $args = array(array_merge($ethoca_args, ["Alerts" => $alerts]));
-
+                            $alerts = collect($alerts);
+                            $mapped_alerts = $alerts->map(
+                                function (EthocaAlert $item) {
+                                    return $item->mappAlertRecordToRequest();
+                                }
+                            );
+                            $args = array(array_merge($ethoca_args, ["Alerts" => $mapped_alerts]));
                             $ack_response = $this->generateRequest($client, 'EthocaAlertAcknowledgement', $args);
-                            $arc_response_record = EthocaResponse::create([
-                                'major_code' => $ack_response->majorCode,
-                                'status' => $ack_response->Status,
-                                'number_of_alerts' => $ack_response->numberOfAlerts ?? 0,
-                                'ethoca_request_id' => $ack_response->ethoca_request_id ?? null,
-                            ]);
-                            foreach ($ack_response->AlertUpdateResponses as $ack_response) {
-                                $ack = EthocaAcknowledgement::create([
-                                    'ethoca_id' => $ack_response->EthocaID,
-                                    'status' => $ack_response->Status,
-                                    'ethoca_response_id' => $ack_response->id,
-                                ]);
-                                if (isset($ack_response->Errors) && isset($ack_response->Errors->Error)) {
-                                    foreach ($ack_response->Errors->Error as $error) {
+                            Arr::forget($args, 'Alerts');
+                            $acK_retry_count = 3;
+                            while ($acK_retry_count && $ack_response->majorCode != 0) {
+                                foreach ($ack_response->AlertUpdateResponses as $ack_response) {
+                                    $ack = EthocaAcknowledgement::create([
+                                        'ethoca_id' => $ack_response->EthocaID,
+                                        'status' => $ack_response->Status,
+                                        'ethoca_response_id' => $ack_response->id,
+                                    ]);
+                                    $alert = $alerts->where('ethoca_id', $ack_response->EthocaID);
+                                    if ($alert) {
+                                        $ack->ethocaAlert()->associate($alert);
+                                        $alert->is_ack = true;
+                                        $alert->save();
+                                    }
+                                    if (isset($ack_response->Errors) && is_array($ack_response->Errors->Error)) {
+                                        foreach ($ack_response->Errors->Error as $error) {
+                                            EthocaError::create([
+                                                'model' => EthocaAcknowledgement::class,
+                                                'model_id' => $ack->id,
+                                                'code' => $error->code,
+                                                'description' => $error->_,
+                                            ]);
+                                        }
+                                    } else if (isset($ack_response->Errors)) {
                                         EthocaError::create([
                                             'model' => EthocaAcknowledgement::class,
-                                            'model_id' => $ethoca_alert->id,
-                                            'code' => $error->code,
-                                            'description' => $error->_,
+                                            'model_id' => $ack->id,
+                                            'code' => $ack_response->Errors->code,
+                                            'description' => $ack_response->Errors->_,
                                         ]);
                                     }
                                 }
+                                // TODO : add a way to retry single acks
+
+                                $acK_retry_count--;
                             }
-                            // TODO : Save Ack request and response if needed
                         }
                     }
                 }
@@ -135,24 +150,30 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
         ]);
         $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
         // save all errors to database
+        $alert_res_model = EthocaResponse::create([
+            'major_code' => $response->majorCode,
+            'status' => $response->Status,
+            'number_of_alerts' => $response->numberOfAlerts ?? null,
+            'ethoca_request_id' => $response->ethoca_request_id ?? null,
+        ]);
         if (isset($response->Errors) && is_array($response->Errors->Error)) {
             foreach ($response->Errors->Error as $error) {
                 EthocaError::create([
-                    'model' => EthocaRequest::class,
-                    'model_id' => $ethoca_request->id,
+                    'model' => EthocaResponse::class,
+                    'model_id' => $alert_res_model->id,
                     'code' => $error->code,
                     'description' => $error->_,
                 ]);
             }
         } else {
             EthocaError::create([
-                'model' => EthocaRequest::class,
-                'model_id' => $ethoca_request->id,
+                'model' => EthocaResponse::class,
+                'model_id' => $alert_res_model->id,
                 'code' => $response->Errors->Error->code,
                 'description' => $response->Errors->Error->_,
             ]);
         }
-        $response->ethoca_request_id = $ethoca_request->id;
+        $response->model = $alert_res_model;
         return $response;
     }
 }
