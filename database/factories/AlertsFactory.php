@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\EthocaAlert;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class AlertsFactory extends Factory
 {
+    protected $model = EthocaAlert::class;
     /**
      * Define the model's default state.
      *

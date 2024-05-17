@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Traits\HasError;
+use Database\Factories\AlertsFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,9 +36,13 @@ class EthocaAlert extends Model
         return $this->hasMany(EthocaUpdate::class);
     }
 
-
-
-
+    /**
+     * Create a new factory instance for the model.
+     */
+    protected static function newFactory(): Factory
+    {
+        return AlertsFactory::new();
+    }
     public static function mapAlertResponseToRecord($alert): EthocaAlert
     {
         $eth_alert = new EthocaAlert();
