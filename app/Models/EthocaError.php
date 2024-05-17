@@ -22,6 +22,10 @@ class EthocaError extends Model
         return $this->belongsTo($this->model, $this->model_id);
     }
 
+    public function ethocaResponse():BelongsTo
+    {
+        return $this->belongsTo(EthocaResponse::class,'model_id');
+    }
     public static function generateErrorsFromResponse($response, $model)
     {
         $errors = [];
