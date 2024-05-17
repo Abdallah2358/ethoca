@@ -19,7 +19,7 @@ return new class extends Migration {
             // update related felids
             $table->foreignIdFor(EthocaAlert::class)->comment('The alert id');
             $table->foreignIdFor(EthocaRequest::class)->comment('The request id that is used to send this update');
-            $table->foreignIdFor(EthocaResponse::class)->comment('The Response id that is used to updated this alert_update status');
+            $table->foreignIdFor(EthocaResponse::class)->nullable()->default(null)->comment('The Response id that is used to updated this alert_update status');
 
             // redundant field as we can get the alert id from the alert model
             // but it is used to reduce the number of queries since time is more important than space
