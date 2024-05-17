@@ -15,15 +15,15 @@ class EthocaRequest extends Model
     use HasFactory, HasError;
     protected $table = 'ethoca_requests';
     protected $guarded = [];
-
+    protected $appends = ['alerts'];
     public function ethocaResponse(): HasOne
     {
         return $this->hasOne(EthocaResponse::class);
     }
 
-    public function ethocaAlerts(): HasMany
+    public function getAlertsAttribute()
     {
-        return $this->hasMany(EthocaAlert::class);
+        return $this->ethocaResponse->ethocaAlerts();
     }
 
     public function ethocaAcknowledgements(): HasMany
