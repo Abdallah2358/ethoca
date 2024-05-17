@@ -18,13 +18,13 @@ class AlertsFactory extends Factory
      */
     public function definition(): array
     {
-        
+
         return [
             'ethoca_response_id' => fake()->numberBetween(1, 10),
             'crm_transaction_id' => fake()->numberBetween(10000, 99999),
-            'is_handled' => fake()->boolean(),
-            'is_updated' => fake()->boolean(),
-            'is_ack' => fake()->boolean(),
+            'is_handled' => false,
+            'is_updated' => false,
+            'is_ack' => false,
             'ethoca_id' => fake()->regexify('[A-Za-z0-9]{25}'),
             'type' => fake()->randomElement([' issuer_alert', 'customerdispute_alert']),
             'alert_timestamp' => fake()->dateTime(),
