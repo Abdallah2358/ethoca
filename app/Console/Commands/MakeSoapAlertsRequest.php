@@ -164,7 +164,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             'major_code' => $response->majorCode,
             'status' => $response->Status,
             'number_of_alerts' => $response->numberOfAlerts ?? null,
-            'ethoca_request_id' => $response->ethoca_request_id ?? null,
+            'ethoca_request_id' => $ethoca_request->id ?? null,
         ]);
         if (isset($response->Errors) && is_array($response->Errors->Error)) {
             foreach ($response->Errors->Error as $error) {

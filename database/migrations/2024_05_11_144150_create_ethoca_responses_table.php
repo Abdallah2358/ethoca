@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignIdFor(EthocaRequest::class)->comment('Request id that is caused this response to trigger');
             $table->integer('major_code')->comment('Major code of the response');
             $table->string('status')->comment('Status of the response');
-            $table->tinyInteger('number_of_alerts')->comment('The number of alerts returned in the request.');
+            $table->tinyInteger('number_of_alerts')->nullable()->default(null)->comment('The number of alerts returned in the request.');
             $table->timestamps();
         });
     }
