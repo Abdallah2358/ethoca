@@ -22,7 +22,7 @@ class ResponseFactory extends Factory
         return [
             'major_code' => fake()->randomElement([0, 2, 3, 4]),
             'status' => fake()->randomElement(['Continue', 'Success', 'Fail']),
-            'NumberOfAlerts' => null
+            'number_of_alerts' => null
         ];
     }
 }
