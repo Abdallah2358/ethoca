@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\EthocaResponse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ResponseFactory extends Factory
 {
+    protected $model = EthocaResponse::class;
     /**
      * Define the model's default state.
      *
