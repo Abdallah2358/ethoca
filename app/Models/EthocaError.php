@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Database\Factories\ErrorFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -10,6 +12,11 @@ class EthocaError extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    protected static function newFactory(): Factory
+    {
+        return ErrorFactory::new();
+    }
     public function error_origin(): BelongsTo
     {
         return $this->belongsTo($this->model, $this->model_id);
