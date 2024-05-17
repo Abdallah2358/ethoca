@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Traits\HasError;
+use Database\Factories\RequestFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -34,6 +36,10 @@ class EthocaRequest extends Model
         return $this->hasMany(EthocaUpdate::class);
     }
 
+    protected static function newFactory(): Factory
+    {
+        return RequestFactory::new();
+    }
     public static function generateRequest(\SoapClient $client, $ethoc_function, $ethoca_args, $start = null, $end = null): mixed
     {
         $title = 'Ethoca 360 Alerts Request';
