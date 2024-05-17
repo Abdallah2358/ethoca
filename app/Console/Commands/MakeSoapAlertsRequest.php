@@ -56,12 +56,18 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             $count = ($alert_response->majorCode == 0 && $alert_response->Status == 'Success') ? 0 : $count; // if the call is successful stop the loop
             // if it is saved successfully
             $saved_alerts = collect([]);
+            $not_ack_alerts = EthocaAlert::where('is_ack', false)->get();
             if (isset($alert_response->model) && isset($alert_response->model->id)) {
                 // if the call is successful store all alerts in database
                 if ($alert_response->majorCode == 0) {
                     foreach ($alert_response->Alerts as $alert) {
-                        $ethoca_alert = EthocaAlert::mapAlertResponseToRecord($alert);
-                        if ($ethoca_alert->save()) {
+                        $ethoca_alert = $not_ack_alerts->where('ethoca_id', $alert->EthocaID)->first();
+                        if (!$ethoca_alert) {
+                            $ethoca_alert = EthocaAlert::mapAlertResponseToRecord($alert);
+                            if ($ethoca_alert->save()) {
+                                $saved_alerts->push($ethoca_alert);
+                            }
+                        } else {
                             $saved_alerts->push($ethoca_alert);
                         }
                     }
@@ -112,7 +118,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
                                     }
                                 }
                                 // TODO : add a way to retry single acks
-
+                                // right now if an ack fails i will get the same alert again
                                 $acK_retry_count--;
                             }
                         }
