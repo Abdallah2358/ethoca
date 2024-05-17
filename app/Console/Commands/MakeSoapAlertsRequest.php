@@ -52,28 +52,32 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
         while ($count) {
             // call Ethoca360Alerts
             $alert_response = $this->generateRequest($client, 'Ethoca360Alerts', $ethoca_args);
-            // store response in db
+
+            // if the call is successful start store all alerts in database
             $count = ($alert_response->majorCode == 0 && $alert_response->Status == 'Success') ? 0 : $count; // if the call is successful stop the loop
             // if it is saved successfully
             $saved_alerts = collect([]);
+            // get all alerts that are not acked
             $not_ack_alerts = EthocaAlert::where('is_ack', false)->get();
             if (isset($alert_response->model) && isset($alert_response->model->id)) {
                 // if the call is successful store all alerts in database
                 if ($alert_response->majorCode == 0) {
                     foreach ($alert_response->Alerts as $alert) {
                         $ethoca_alert = $not_ack_alerts->where('ethoca_id', $alert->EthocaID)->first();
+                        // check if the alert is already saved
                         if (!$ethoca_alert) {
                             $ethoca_alert = EthocaAlert::mapAlertResponseToRecord($alert);
                             if ($ethoca_alert->save()) {
                                 $saved_alerts->push($ethoca_alert);
                             }
                         } else {
+                            // push the alert to the saved alerts to have it acked
                             $saved_alerts->push($ethoca_alert);
                         }
                     }
                     // Now Start Acklogment of Received Alerts
                     // chunk the alerts to 24 sized arrays to follow ethoca docs
-                    foreach ($$saved_alerts->chunk(24) as $alertsArray) {
+                    foreach ($saved_alerts->chunk(24) as $alertsArray) {
                         // $alerts_collection = collect($alertsArray);
                         foreach ($alertsArray as $alerts) {
                             $alerts = collect($alerts);
