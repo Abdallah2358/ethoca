@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\UpdateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,5 +24,10 @@ class EthocaUpdate extends Model
             }
         }
         return $alert_update;
+    }
+
+    protected static function newFactory()
+    {
+        return UpdateFactory::new();
     }
 }
