@@ -26,6 +26,23 @@ class EthocaError extends Model
     {
         return $this->belongsTo(EthocaResponse::class,'model_id');
     }
+    public function ethocaRequest():BelongsTo
+    {
+        return $this->belongsTo(EthocaRequest::class,'model_id');
+    }
+    public function ethocaAlert():BelongsTo
+    {
+        return $this->belongsTo(EthocaAlert::class,'model_id');
+    }
+    public function ethocaAcknowledgement():BelongsTo
+    {
+        return $this->belongsTo(EthocaAcknowledgement::class,'model_id');
+    }
+    public function ethocaUpdate():BelongsTo
+    {
+        return $this->belongsTo(EthocaUpdate::class,'model_id');
+    }
+
     public static function generateErrorsFromResponse($response, $model)
     {
         $errors = [];
