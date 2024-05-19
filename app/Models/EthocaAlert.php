@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class EthocaAlert extends Model
 {
@@ -26,6 +27,10 @@ class EthocaAlert extends Model
         return $this->belongsTo(EthocaResponse::class);
     }
 
+    public function crmActions(): HasMany
+    {
+        return $this->hasMany(CrmAction::class);
+    }
     public function ethocaAcknowledgements(): HasMany
     {
         return $this->hasMany(EthocaAcknowledgement::class);
@@ -102,4 +107,35 @@ class EthocaAlert extends Model
             'ChargebackCurrency' => $this->chargeback_currency,
         ];
     }
+    #region Accessors
+    public function errors(): Attribute
+    {
+        $errors = collect([]);
+
+        // $errors = $errors->concat($this->ethocaResponse->errors);
+        $errors = $errors->concat($this->ethocaAcknowledgements()->get()->map(function ($ack) {
+            return $ack->errors;
+        })->collapse());
+        $errors = $errors->concat($this->ethocaUpdates()->get()->map(function ($ack) {
+            return $ack->errors;
+        })->collapse());
+        $errors = $errors->concat($this->crmActions()->get()->map(function ($ack) {
+            return $ack->errors;
+        })->collapse());
+        $errors = $errors->concat(
+            EthocaError::where(
+                [
+                    'model' => self::class,
+                    'model_id' => $this->id
+                ]
+            )->get()
+        );
+        // dd($errors);
+        return Attribute::make(
+            get: function () use ($errors) {
+                return $errors;
+            }
+        );
+    }
+    #endregion
 }
