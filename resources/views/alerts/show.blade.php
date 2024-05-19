@@ -52,8 +52,10 @@
 <table border="1">
     <thead>
         <th>Id</th>
-        <th>ethoca_id</th>
-        <th>errors</th>
+        <th>Action Name</th>
+        <th>Details Link</th>
+        <th>Status</th>
+        <th>Errors</th>
     </thead>
     <tbody>
         @foreach ($alert->crmActions as $crmAction)
