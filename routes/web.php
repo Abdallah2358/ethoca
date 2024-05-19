@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Controllers\CrmActionsController;
 use App\Http\Controllers\EAlertController;
 use App\Http\Controllers\ERequestController;
+use App\Http\Controllers\UsersController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,11 +23,8 @@ Route::get('/', function () {
 });
 Route::resource('requests', ERequestController::class);
 Route::resource('alerts', EAlertController::class);
-
-Auth::routes();
+Route::resource('crm-actions', CrmActionsController::class);
+Route::resource('users', UsersController::class);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-use App\Http\Controllers\UsersController;
-
-Route::get('/users', [UsersController::class, 'index'])->name('users.index');
