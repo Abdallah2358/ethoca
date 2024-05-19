@@ -2,7 +2,6 @@
     th {
         position: sticky;
         top: 50px;
-        /* 0px if you don't have a navbar, but something is required */
         background: white;
     }
 </style>
@@ -83,7 +82,7 @@
                 <td>{{ $alert->chargeback_currency }}</td>
                 <td>{{ $alert->created_at }}</td>
                 <td>{{ $alert->updated_at }}</td>
-                <td>{{ count($alert->errors) }}</td>
+                <td>{{ $alert->errors->count() }}</td>
             </tr>
         @endforeach
     </tbody>
