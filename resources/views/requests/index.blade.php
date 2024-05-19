@@ -1,3 +1,11 @@
+<style>
+    th {
+        position: sticky;
+        top: 50px;
+        /* 0px if you don't have a navbar, but something is required */
+        background: white;
+    }
+</style>
 <table style="text-align: center" border="1">
     <thead>
         <th>id</th>
