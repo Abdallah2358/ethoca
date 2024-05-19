@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class EthocaRequest extends Model
 {
@@ -20,10 +21,35 @@ class EthocaRequest extends Model
     {
         return $this->hasOne(EthocaResponse::class);
     }
-
+    public function errors(): Attribute
+    {
+        $errors = collect([]);
+        // dd($this->ethocaUpdates->errors);
+        $errors = $errors->concat($this->ethocaResponse->errors);
+        $errors = $errors->concat($this->ethocaAcknowledgements()->get()->map(function ($ack) {
+            return $ack->errors;
+        })->collapse());
+        $errors = $errors->concat($this->ethocaUpdates()->get()->map(function ($ack) {
+            return $ack->errors;
+        })->collapse());
+        $errors = $errors->concat(
+            EthocaError::where(
+                [
+                    'model' => self::class,
+                    'model_id' => $this->id
+                ]
+            )->get()
+        );
+        // dd($errors);
+        return Attribute::make(
+            get: function () use ($errors) {
+                return $errors;
+            }
+        );
+    }
     public function getAlertsAttribute()
     {
-        return $this->ethocaResponse->ethocaAlerts();
+        return $this->ethocaResponse->ethocaAlerts;
     }
 
     public function ethocaAcknowledgements(): HasMany
