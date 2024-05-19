@@ -26,12 +26,12 @@ class EthocaAlert extends Model
         return $this->belongsTo(EthocaResponse::class);
     }
 
-    public function ethocaAcknowledgement(): HasMany
+    public function ethocaAcknowledgements(): HasMany
     {
         return $this->hasMany(EthocaAcknowledgement::class);
     }
 
-    public function ethocaUpdate(): HasMany
+    public function ethocaUpdates(): HasMany
     {
         return $this->hasMany(EthocaUpdate::class);
     }
