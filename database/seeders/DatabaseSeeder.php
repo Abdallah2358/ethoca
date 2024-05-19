@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
                 'status' => 'success',
                 'ethoca_request_id' => $ack_req->id,
             ])->create();
-            $alerts = $request->alerts->get();
+            $alerts = $request->alerts;
             foreach ($alerts as $alert) {
                 $status = fake()->randomElement(['success', 'retry', 'fail']);
                 if ($status != 'success') {
@@ -147,6 +147,10 @@ class DatabaseSeeder extends Seeder
                         $alert->save();
                     }
                 }
+            }else{
+                EthocaError::factory([
+                    'model' => EthocaResponse::class,
+                ])->for($update_res)->create();
             }
         }
     }
