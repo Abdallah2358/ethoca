@@ -48,6 +48,25 @@
         @endforeach
     </tbody>
 </table>
+<h3>CRM Actions</h3>
+<table border="1">
+    <thead>
+        <th>Id</th>
+        <th>ethoca_id</th>
+        <th>errors</th>
+    </thead>
+    <tbody>
+        @foreach ($alert->crmActions as $crmAction)
+            <tr>
+                <td>{{ $crmAction->id }}</td>
+                <td>{{ $crmAction->name }}</td>
+                <td>{{ $crmAction->link }}</td>
+                <td>{{ $crmAction->status }}</td>
+                <td>{{ $crmAction->errors->count() }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
 <h3>Updates</h3>
 <table border='1'>
     <thead>
@@ -61,6 +80,41 @@
                 <td>{{ $ethocaUpdate->id }}</td>
                 <td>{{ $ethocaUpdate->ethoca_id }}</td>
                 <td>{{ $ethocaUpdate->errors->count() }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+<h3>Errors</h3>
+<table border="1">
+    <thead>
+        <th>code</th>
+        <th>Origin</th>
+        
+        <th>description</th>
+        <th>notes</th>
+    </thead>
+    <tbody>
+        @foreach ($alert->errors as $error)
+            <tr>
+                <td>{{ $error['code'] }}</td>
+                <td>
+                    @switch($error['model'])
+                        @case('App\Models\EthocaResponse')
+                            Response
+                            @break
+                        @case('App\Models\EthocaAcknowledgement')
+                            Acknowledgement
+                            @break
+                        @case('App\Models\EthocaUpdate')
+                            Update
+                            @break
+                        @default
+                            Unknown
+                    @endswitch
+                    # {{ $error['model_id'] }}
+                </td>
+                <td>{{ $error['description'] }}</td>
+                <td>{{ $error['notes'] }}</td>
             </tr>
         @endforeach
     </tbody>
