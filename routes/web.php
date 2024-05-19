@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CrmActionsController;
+use App\Http\Controllers\CrmTransactionController;
 use App\Http\Controllers\EAlertController;
 use App\Http\Controllers\ERequestController;
 use App\Http\Controllers\UsersController;
@@ -24,6 +25,7 @@ Route::get('/', function () {
 Route::resource('requests', ERequestController::class);
 Route::resource('alerts', EAlertController::class);
 Route::resource('crm-actions', CrmActionsController::class);
+Route::resource('crm-transactions', CrmTransactionController::class);
 Route::resource('users', UsersController::class);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -13,6 +13,8 @@ class CrmTransactionController extends Controller
     public function index()
     {
         //
+       $crmTransactions= CrmTransaction::paginate(100);
+        return view('crm-transactions.index', compact('crmTransactions'));
     }
 
     /**
@@ -37,6 +39,7 @@ class CrmTransactionController extends Controller
     public function show(CrmTransaction $crmTransaction)
     {
         //
+        return view('crm-transactions.show', compact('crmTransaction'));
     }
 
     /**
