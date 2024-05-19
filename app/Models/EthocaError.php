@@ -22,31 +22,35 @@ class EthocaError extends Model
         return $this->belongsTo($this->model, $this->model_id);
     }
 
-    public function ethocaResponse():BelongsTo
+    public function ethocaResponse(): BelongsTo
     {
-        return $this->belongsTo(EthocaResponse::class,'model_id');
+        return $this->belongsTo(EthocaResponse::class, 'model_id');
     }
-    public function ethocaRequest():BelongsTo
+    public function ethocaRequest(): BelongsTo
     {
-        return $this->belongsTo(EthocaRequest::class,'model_id');
+        return $this->belongsTo(EthocaRequest::class, 'model_id');
     }
-    public function ethocaAlert():BelongsTo
+    public function ethocaAlert(): BelongsTo
     {
-        return $this->belongsTo(EthocaAlert::class,'model_id');
+        return $this->belongsTo(EthocaAlert::class, 'model_id');
     }
-    public function ethocaAcknowledgement():BelongsTo
+    public function ethocaAcknowledgement(): BelongsTo
     {
-        return $this->belongsTo(EthocaAcknowledgement::class,'model_id');
+        return $this->belongsTo(EthocaAcknowledgement::class, 'model_id');
     }
-    public function ethocaUpdate():BelongsTo
+    public function ethocaUpdate(): BelongsTo
     {
-        return $this->belongsTo(EthocaUpdate::class,'model_id');
+        return $this->belongsTo(EthocaUpdate::class, 'model_id');
     }
-    public function crmAction() : BelongsTo
+    public function crmAction(): BelongsTo
     {
-        return $this->belongsTo(CrmAction::class,'model_id');
+        return $this->belongsTo(CrmAction::class, 'model_id');
     }
 
+    public function crmTransaction(): BelongsTo
+    {
+        return $this->belongsTo(CrmTransaction::class, 'model_id');
+    }
     public static function generateErrorsFromResponse($response, $model)
     {
         $errors = [];
