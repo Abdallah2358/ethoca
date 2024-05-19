@@ -12,10 +12,10 @@ class CrmActionsController extends BaseController
     use AuthorizesRequests, ValidatesRequests;
     public function index()
     {
-        return view('crm-actions.index', ['crmActions' => CrmAction::all()]);
+        return view('crm-actions.index', ['actions' => CrmAction::paginate()]);
     }
     function show($id)
     {
-        return view('crm-actions.show', ['crmAction' => CrmAction::findOrFail($id)]);
+        return view('crm-actions.show', ['action' => CrmAction::findOrFail($id)]);
     }
 }

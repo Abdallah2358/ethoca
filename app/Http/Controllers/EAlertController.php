@@ -12,7 +12,7 @@ class EAlertController extends Controller
     use AuthorizesRequests, ValidatesRequests;
     public function index()
     {
-        return view('alerts.index', ['alerts' => EthocaAlert::all()]);
+        return view('alerts.index', ['alerts' => EthocaAlert::paginate(200)]);
     }
     function show($id)
     {
