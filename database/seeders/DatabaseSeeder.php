@@ -42,17 +42,21 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $csvFile = database_path('seeders/raw_data.csv');
-
+        $trans_count = 0;
         // Open the CSV file
         if (($handle = fopen($csvFile, 'r')) !== FALSE) {
             // Get the headers from the first row
             $headers = fgetcsv($handle, 1000, ',');
 
             // Process each row of the CSV file
-            while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ',')) !== FALSE && $trans_count < 10000) {
+                $trans_count++;
                 // Combine the headers with the data to create an associative array
-                $record = array_combine($headers, $data);
-
+                try {
+                    $record = array_combine($headers, $data);
+                } catch (\Exception $e) {
+                    continue;
+                }
                 // Insert the record into the raw_data table
                 CrmTransaction::create([
                     'transactionId' => $record['transactionId'] ?? null,
@@ -134,7 +138,7 @@ class DatabaseSeeder extends Seeder
             // Close the CSV file
             fclose($handle);
             // recived alerts with no errors
-            
+
             $requests = EthocaRequest::factory(150)
                 ->has(EthocaResponse::factory([
                     'major_code' => 1,
