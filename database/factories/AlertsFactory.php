@@ -21,7 +21,7 @@ class AlertsFactory extends Factory
 
         return [
             'ethoca_response_id' => fake()->numberBetween(1, 10),
-            'crm_transaction_id' => fake()->numberBetween(10000, 99999),
+            'crm_transaction_id' => fake()->numberBetween(1, 52160),
             'is_handled' => false,
             'is_updated' => false,
             'is_ack' => false,

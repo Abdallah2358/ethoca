@@ -134,6 +134,7 @@ class DatabaseSeeder extends Seeder
             // Close the CSV file
             fclose($handle);
             // recived alerts with no errors
+            
             $requests = EthocaRequest::factory(150)
                 ->has(EthocaResponse::factory([
                     'major_code' => 1,
