@@ -5,12 +5,22 @@ namespace App\Models;
 use Database\Factories\UpdateFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EthocaUpdate extends Model
 {
     use HasFactory;
-    protected $table = 'ethoca_alert_updates';
+    protected $table = 'ethoca_updates';
     protected $guarded = [];
+    /**
+     * Get the response that owns the EthocaUpdate
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function ethocaResponse(): BelongsTo
+    {
+        return $this->belongsTo(EthocaResponse::class);
+    }
     public function getUpdateForRequest()
     {
         $alert_update = array();

@@ -23,7 +23,7 @@ class UpdateFactory extends Factory
      */
     public function definition(): array
     {
-        $confirmed_fraud_statuses = [
+        $confirmed_fraud_outcomes = [
             "stopped",
             "partially_stopped",
             "previously_cancelled",
@@ -34,7 +34,7 @@ class UpdateFactory extends Factory
             "shipper_contacted",
             "other"
         ];
-        $customer_dispute_statuses = [
+        $customer_dispute_outcomes = [
             "resolved",
             "previously_refunded",
             "unresolved_dispute",
@@ -43,9 +43,11 @@ class UpdateFactory extends Factory
 
         ];
 
-        $status = $this->faker->randomElement(array_merge($confirmed_fraud_statuses, $customer_dispute_statuses));
+        $outcome = $this->faker->randomElement(array_merge($confirmed_fraud_outcomes, $customer_dispute_outcomes));
+        $status = fake()->randomElement(['success', 'failed']);
+
         return [
-            'outcome' => $this->faker->sentence(), // 'Ethoca 360 Alerts Request'
+            'outcome' => $outcome, // 'Ethoca 360 Alerts Request'
             'status' => $status,
             'refunded' => $this->faker->randomElement(["refunded", "not refunded", "not settled"]),
             'created_at' => now(),
