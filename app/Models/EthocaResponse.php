@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasError;
 use Database\Factories\ResponseFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class EthocaResponse extends Model
 {
-    use HasFactory;
+    use HasFactory,HasError;
     protected $table = 'ethoca_responses';
     protected $guarded = [];
     public function ethocaRequest(): BelongsTo
