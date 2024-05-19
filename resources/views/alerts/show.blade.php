@@ -31,3 +31,37 @@
 <h3>chargeback_currency : {{ $alert->chargeback_currency }}</h3>
 <h3>created_at : {{ $alert->created_at }}</h3>
 <h3>updated_at : {{ $alert->updated_at }}</h3>
+<h3>Acknowledgements</h3>
+<table border='1'>
+    <thead>
+        <th>Id</th>
+        <th>ethoca_id</th>
+        <th>errors</th>
+    </thead>
+    <tbody>
+        @foreach ($alert->ethocaAcknowledgements as $ethocaAcknowledgement)
+            <tr>
+                <td>{{ $ethocaAcknowledgement->id }}</td>
+                <td>{{ $ethocaAcknowledgement->ethoca_id }}</td>
+                <td>{{ $ethocaAcknowledgement->errors->count() }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
+<h3>Updates</h3>
+<table border='1'>
+    <thead>
+        <th>Id</th>
+        <th>ethoca_id</th>
+        <th>errors</th>
+    </thead>
+    <tbody>
+        @foreach ($alert->ethocaUpdates as $ethocaUpdate)
+            <tr>
+                <td>{{ $ethocaUpdate->id }}</td>
+                <td>{{ $ethocaUpdate->ethoca_id }}</td>
+                <td>{{ $ethocaUpdate->errors->count() }}</td>
+            </tr>
+        @endforeach
+    </tbody>
+</table>
