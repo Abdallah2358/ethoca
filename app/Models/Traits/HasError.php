@@ -16,7 +16,7 @@ trait HasError
                         'model' => self::class,
                         'model_id' => $this->id
                     ]
-                )->get()->toArray();
+                )->get();
             }
         );
     }
