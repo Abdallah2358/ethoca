@@ -7,6 +7,9 @@
         <th>search_end_date</th>
         <th>created_at</th>
         <th>updated_at</th>
+        <th>alerts</th>
+        <th>acks</th>
+        <th>updates</th>
         <th>errors</th>
         </th>
     </thead>
@@ -24,7 +27,10 @@
                 <td>{{ $request->search_end_date }}</td>
                 <td>{{ $request->created_at }}</td>
                 <td>{{ $request->updated_at }}</td>
-                <td>{{ count($request->errors) }}</td>
+                <td>{{ $request->alerts->count() }}</td>
+                <td>{{ $request->ethocaAcknowledgements->count() }}</td>
+                <td>{{ $request->ethocaUpdates->count() }}</td>
+                <td>{{ $request->errors->count() }}</td>
             </tr>
         @endforeach
 
