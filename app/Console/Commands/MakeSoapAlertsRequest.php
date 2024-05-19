@@ -158,41 +158,43 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             'search_start_date' => $ethoca_args['SearchStartDate'] ?? null,
             'search_end_date' => $ethoca_args['SearchEndDate'] ?? null,
         ]);
-        $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
-        // save all errors to database
-        if (is_soap_fault($response)) {
-            EthocaError::create([
-                'model' => EthocaRequest::class,
-                'model_id' => $ethoca_request->id,
-                'code' => $response->faultcode,
-                'description' => $response->faultstring,
+        try {
+            $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
+            $alert_res_model = EthocaResponse::create([
+                'major_code' => $response->majorCode,
+                'status' => $response->Status,
+                'number_of_alerts' => $response->numberOfAlerts ?? null,
+                'ethoca_request_id' => $ethoca_request->id ?? null,
             ]);
-            // trigger_error("SOAP Fault: (faultcode: {$response->faultcode}, faultstring: {$response->faultstring})", E_USER_ERROR);
-        }
-        $alert_res_model = EthocaResponse::create([
-            'major_code' => $response->majorCode,
-            'status' => $response->Status,
-            'number_of_alerts' => $response->numberOfAlerts ?? null,
-            'ethoca_request_id' => $ethoca_request->id ?? null,
-        ]);
-        if (isset($response->Errors) && is_array($response->Errors->Error)) {
-            foreach ($response->Errors->Error as $error) {
+            if (isset($response->Errors) && is_array($response->Errors->Error)) {
+                foreach ($response->Errors->Error as $error) {
+                    EthocaError::create([
+                        'model' => EthocaResponse::class,
+                        'model_id' => $alert_res_model->id,
+                        'code' => $error->code,
+                        'description' => $error->_,
+                    ]);
+                }
+            } else {
                 EthocaError::create([
                     'model' => EthocaResponse::class,
                     'model_id' => $alert_res_model->id,
-                    'code' => $error->code,
-                    'description' => $error->_,
+                    'code' => $response->Errors->Error->code,
+                    'description' => $response->Errors->Error->_,
                 ]);
             }
-        } else {
+            $response->model = $alert_res_model;
+        } catch (\Throwable $th) {
             EthocaError::create([
-                'model' => EthocaResponse::class,
-                'model_id' => $alert_res_model->id,
-                'code' => $response->Errors->Error->code,
-                'description' => $response->Errors->Error->_,
+                'model' => EthocaRequest::class,
+                'model_id' => $ethoca_request->id,
+                'code' => 500,
+                'description' => 'Failed to connect to Ethoca 360 Alerts API',
             ]);
         }
-        $response->model = $alert_res_model;
+        // save all errors to database
+
+
         return $response;
     }
 }
