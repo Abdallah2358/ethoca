@@ -160,6 +160,15 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
         ]);
         $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
         // save all errors to database
+        if (is_soap_fault($response)) {
+            EthocaError::create([
+                'model' => EthocaRequest::class,
+                'model_id' => $ethoca_request->id,
+                'code' => $response->faultcode,
+                'description' => $response->faultstring,
+            ]);
+            // trigger_error("SOAP Fault: (faultcode: {$response->faultcode}, faultstring: {$response->faultstring})", E_USER_ERROR);
+        }
         $alert_res_model = EthocaResponse::create([
             'major_code' => $response->majorCode,
             'status' => $response->Status,
