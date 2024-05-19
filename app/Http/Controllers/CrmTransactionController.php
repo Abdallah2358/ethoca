@@ -10,13 +10,33 @@ class CrmTransactionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
-       $crmTransactions= CrmTransaction::paginate(100);
+        switch ($request->paid) {
+            case '1':
+                $crmTransactions = CrmTransaction::where('isChargedback', true)->paginate(100);
+                break;
+            case '0':
+                $crmTransactions = CrmTransaction::where('isChargedback', 0)->paginate(100);
+                break;
+            default:
+                $crmTransactions = CrmTransaction::paginate(250);
+                break;
+        }
+
+        // $crmTransactions= CrmTransaction::where('isChargedback',true)->paginate(100);
         return view('crm-transactions.index', compact('crmTransactions'));
     }
 
+    /**
+     * Display the specified resource.
+     */
+    public function show(CrmTransaction $crmTransaction)
+    {
+        //
+        return view('crm-transactions.show', compact('crmTransaction'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -33,14 +53,6 @@ class CrmTransactionController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(CrmTransaction $crmTransaction)
-    {
-        //
-        return view('crm-transactions.show', compact('crmTransaction'));
-    }
 
     /**
      * Show the form for editing the specified resource.

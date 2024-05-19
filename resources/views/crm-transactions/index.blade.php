@@ -5,6 +5,9 @@
         background: white;
     }
 </style>
+<h1>CRM Transactions</h1>
+<a href="{{ route('crm-transactions.index', ['paid' => true]) }}">Paid</a>
+<a href="{{ route('crm-transactions.index', ['paid' => false]) }}">Not Paid</a>
 <table style="text-align: center" border="1">
     <thead>
         <th>id</th>
@@ -13,6 +16,7 @@
         <th>merchant</th>
         <th>merchantDescriptor</th>
         <th>merchantId</th>
+        <th>isChargedback</th>
         <th>alerts</th>
     </thead>
     <tbody>
@@ -28,6 +32,7 @@
                 <td>{{ $crmTransaction->merchant }}</td>
                 <td>{{ $crmTransaction->merchantDescriptor }}</td>
                 <td>{{ $crmTransaction->merchantId }}</td>
+                <td>{{ $crmTransaction->isChargedback }}</td>
                 <td>{{ $crmTransaction->ethocaAlerts->count() }}</td>
             </tr>
         @endforeach
