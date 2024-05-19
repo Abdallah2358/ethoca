@@ -42,6 +42,10 @@ class EthocaError extends Model
     {
         return $this->belongsTo(EthocaUpdate::class,'model_id');
     }
+    public function crmAction() : BelongsTo
+    {
+        return $this->belongsTo(CrmAction::class,'model_id');
+    }
 
     public static function generateErrorsFromResponse($response, $model)
     {

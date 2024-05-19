@@ -110,6 +110,9 @@
                         @case('App\Models\EthocaUpdate')
                             Update
                             @break
+                        @case('App\Models\CrmAction')
+                            Action
+                            @break
                         @default
                             Unknown
                     @endswitch

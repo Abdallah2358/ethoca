@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\CrmAction;
 use App\Models\EthocaAcknowledgement;
 use App\Models\EthocaAlert;
 use App\Models\EthocaError;
@@ -40,7 +41,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // recived alerts with no errors
-        $requests =    EthocaRequest::factory(150)
+        $requests = EthocaRequest::factory(150)
             ->has(EthocaResponse::factory([
                 'major_code' => 1,
                 'status' => 'success',
@@ -57,16 +58,20 @@ class DatabaseSeeder extends Seeder
             # code...
             EthocaError::factory([
                 'model' => EthocaResponse::class,
-            ])->for(EthocaResponse::factory([
-                'major_code' => fake()->randomElement([2, 3, 4]),
-                'status' => 'Fail',
-                'number_of_alerts' => 0,
-            ])->for(EthocaRequest::factory(
-                [
-                    'title' => 'Ethoca 360 Alerts Request',
-                    'ethoca_fun_code' => '1',
-                ]
-            )))->create();
+            ])->for(
+                    EthocaResponse::factory([
+                        'major_code' => fake()->randomElement([2, 3, 4]),
+                        'status' => 'Fail',
+                        'number_of_alerts' => 0,
+                    ])->for(
+                            EthocaRequest::factory(
+                                [
+                                    'title' => 'Ethoca 360 Alerts Request',
+                                    'ethoca_fun_code' => '1',
+                                ]
+                            )
+                        )
+                )->create();
         }
         $ack_alerts = collect([]);
         // ack alerts
@@ -87,11 +92,11 @@ class DatabaseSeeder extends Seeder
                     EthocaError::factory([
                         'model' => EthocaAcknowledgement::class,
                     ])->for(EthocaAcknowledgement::factory([
-                        'ethoca_alert_id' => $alert->id,
-                        'ethoca_request_id' => $ack_req->id,
-                        'ethoca_id' => $alert->ethoca_id,
-                        'status' => $status,
-                    ])->for($ack_res))->create();
+                            'ethoca_alert_id' => $alert->id,
+                            'ethoca_request_id' => $ack_req->id,
+                            'ethoca_id' => $alert->ethoca_id,
+                            'status' => $status,
+                        ])->for($ack_res))->create();
                 } else {
                     EthocaAcknowledgement::factory([
                         'ethoca_alert_id' => $alert->id,
@@ -105,6 +110,38 @@ class DatabaseSeeder extends Seeder
                 }
             }
         }
+
+        //handle acked alerts using CRM actions
+        $actions = ['Send Email', 'Call Customer', 'Block Account', 'Refund Paid Amount', "Refund Confirmed"];
+        foreach ($ack_alerts as $alert) {
+            foreach ($actions as $action) {
+                $status = fake()->boolean();
+                $max_error_count = 3;
+
+                while (!$status && $max_error_count) {
+                    EthocaError::factory(['model' => CrmAction::class])
+                        ->for(
+                            CrmAction::factory([
+                                'name' => $action,
+                                'link' => fake()->url(),
+                                'status' => 'failed'
+                            ])->for($alert)
+                        )->create();
+                    $max_error_count--;
+                }
+                CrmAction::factory([
+                    'name' => $action,
+                    'link' => fake()->url(),
+                    'status' => 'completed',
+                ])->for($alert)->create();
+                if ($action == 'Refund Confirmed') {
+                    $alert->is_handled = true;
+                    $alert->save();
+                }
+            }
+        }
+
+
 
         // update alerts
         // $alerts_arrays = $request->alerts->get()->where('is_ack', true)->chunk(4);
@@ -129,12 +166,12 @@ class DatabaseSeeder extends Seeder
                         EthocaError::factory([
                             'model' => EthocaUpdate::class,
                         ])->for(EthocaUpdate::factory([
-                            'ethoca_alert_id' => $alert->id,
-                            'ethoca_request_id' => $update_req->id,
-                            'ethoca_id' => $alert->ethoca_id,
-                            'status' => false,
-                            'outcome' => $outcome
-                        ])->for($update_res))->create();
+                                'ethoca_alert_id' => $alert->id,
+                                'ethoca_request_id' => $update_req->id,
+                                'ethoca_id' => $alert->ethoca_id,
+                                'status' => false,
+                                'outcome' => $outcome
+                            ])->for($update_res))->create();
                     } else {
                         EthocaUpdate::factory([
                             'ethoca_alert_id' => $alert->id,
@@ -147,7 +184,7 @@ class DatabaseSeeder extends Seeder
                         $alert->save();
                     }
                 }
-            }else{
+            } else {
                 EthocaError::factory([
                     'model' => EthocaResponse::class,
                 ])->for($update_res)->create();
