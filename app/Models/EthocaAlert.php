@@ -31,6 +31,12 @@ class EthocaAlert extends Model
     {
         return $this->hasMany(CrmAction::class);
     }
+
+    public function crmTransaction(): BelongsTo
+    {
+        return $this->belongsTo(CrmTransaction::class);
+    }
+
     public function ethocaAcknowledgements(): HasMany
     {
         return $this->hasMany(EthocaAcknowledgement::class);

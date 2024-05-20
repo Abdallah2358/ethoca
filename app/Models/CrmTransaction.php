@@ -6,13 +6,13 @@ use App\Models\Traits\HasError;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CrmTransaction extends Model
 {
     use HasFactory, HasError;
-    public function ethocaAlerts(): HasMany
+    public function ethocaAlert(): HasOne
     {
-        return $this->hasMany(EthocaAlert::class);
-
+        return $this->hasOne(EthocaAlert::class);
     }
 }
