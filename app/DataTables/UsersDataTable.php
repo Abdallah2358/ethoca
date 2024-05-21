@@ -72,10 +72,6 @@ class UsersDataTable extends DataTable
                     'vieTotal' => false,
                     'viewCount' => false,
                 ],
-            ])
-            ->parameters([
-                'dom' => 'PBfrtip',
-                'buttons' => ['export', 'print', 'reset', 'reload'],
             ]);
     }
 

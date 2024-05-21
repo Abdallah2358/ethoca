@@ -26,7 +26,8 @@ Route::resource('requests', ERequestController::class);
 Route::resource('alerts', EAlertController::class);
 Route::resource('crm-actions', CrmActionsController::class);
 Route::resource('crm-transactions', CrmTransactionController::class);
-Route::resource('users', UsersController::class);
-
+// Route::resource('users', UsersController::class);
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+Route::get('/users/data', [UsersController::class, 'data'])->name('users.data');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
