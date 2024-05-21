@@ -6,13 +6,20 @@ use App\Models\EthocaAlert;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller;
+use Yajra\DataTables\DataTables;
 
 class EAlertController extends Controller
 {
     use AuthorizesRequests, ValidatesRequests;
     public function index()
     {
-        return view('alerts.index', ['alerts' => EthocaAlert::paginate(200)]);
+        // dd(EthocaAlert::all());
+        return view('alerts.index');
+    }
+    function data(): mixed
+    {
+        $model = EthocaAlert::query();
+        return DataTables::of($model)->toJson();
     }
     function show($id)
     {

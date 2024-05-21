@@ -24,6 +24,7 @@ Route::get('/', function () {
 });
 Route::resource('requests', ERequestController::class);
 Route::resource('alerts', EAlertController::class);
+Route::get('alerts-data', [EAlertController::class,'data'])->name('alerts.data');
 Route::resource('crm-actions', CrmActionsController::class);
 Route::resource('crm-transactions', CrmTransactionController::class);
 // Route::resource('users', UsersController::class);
