@@ -13,5 +13,10 @@
         "laravel-vite-plugin": "^1.0.0",
         "sass": "^1.56.1",
         "vite": "^5.0.0"
+    },
+    "dependencies": {
+        "datatables.net": "^2.0.7",
+        "datatables.net-dt": "^2.0.7",
+        "datatables.net-searchpanes": "^2.3.0"
     }
 }
