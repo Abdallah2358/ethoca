@@ -20,9 +20,13 @@ class TransactionSeeder extends Seeder
         if (($handle = fopen($csvFile, 'r')) !== FALSE) {
             // Get the headers from the first row
             $headers = fgetcsv($handle, 1000, ',');
-
+            $count = 0;
             // Process each row of the CSV file
-            while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
+            while (
+                (
+                    $data = fgetcsv($handle, 1000, ',')) !== FALSE
+                && $count++ < 100000
+            ) {
                 $trans_count++;
                 // Combine the headers with the data to create an associative array
                 try {
