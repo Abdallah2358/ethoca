@@ -27,12 +27,23 @@ class ProcessWebhookJob extends SpatieProcessWebhookJob
      */
     public function handle(): void
     {
-        $payload = $this->webhookCall->payload;
-        $payload['alert_timestamp'] = date_format(date_create($payload['alert_timestamp']), 'Y-m-d\TH:i:s.v');
-        $payload['transaction_timestamp'] = date_format(date_create($payload['transaction_timestamp']), 'Y-m-d\TH:i:s.v');
-        $alert = EthocaAlert::create($payload);
-        $alert->webhookCall()->associate($this->webhookCall);
-        $alert->save();
+        $ethoca_id = $this->webhookCall->payload['ethoca_id'];
+        try {
+            $payload = $this->webhookCall->payload;
+            $payload['alert_timestamp'] = date_format(date_create($payload['alert_timestamp']), 'Y-m-d\TH:i:s.v');
+            $payload['transaction_timestamp'] = date_format(date_create($payload['transaction_timestamp']), 'Y-m-d\TH:i:s.v');
+            $this->webhookCall->ethoca_id = $ethoca_id;
+            $alert = EthocaAlert::create($payload);
+            $alert->webhookCall()->associate($this->webhookCall);
+            $alert->save();
+            $this->webhookCall->is_success = true;
+            $this->webhookCall->save();
+        } catch (\Throwable $th) {
+            $this->webhookCall->ethoca_id = $ethoca_id;
+            $this->webhookCall->save();
+            throw $th;
+        }
+
         // throw new \Exception("Error Processing Request", 1);
     }
 }
