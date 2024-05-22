@@ -25,7 +25,7 @@ class TransactionSeeder extends Seeder
             while (
                 (
                     $data = fgetcsv($handle, 1000, ',')) !== FALSE
-                && $count++ < 100000
+                // && $count++ < 100000
             ) {
                 $trans_count++;
                 // Combine the headers with the data to create an associative array

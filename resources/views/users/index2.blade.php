@@ -57,9 +57,12 @@
             layout: {
                 topStart: {
 
-                    buttons: ['pageLength', 'searchPanes', 'pdf','excel','print'
-                    ]
-                }
+                    buttons: ['pageLength', {
+                        extend: 'searchPanes',
+                        text: 'Filter'
+                    }, 'pdf', 'excel', 'print']
+                },
+
             },
             // searchPanes: {
             //     order:['Email','Name']
