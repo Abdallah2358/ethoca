@@ -32,3 +32,4 @@ Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 Route::get('/users/data', [UsersController::class, 'data'])->name('users.data');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::webhooks('EthocaAlertNotification');
