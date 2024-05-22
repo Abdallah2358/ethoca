@@ -9,6 +9,7 @@ class SignatureValidator implements SpatieSignatureValidator
 {
     public function isValid(Request $request, WebhookConfig $config): bool
     {
+        # TODO : Add Auth logic here
         return true;
     }
 
