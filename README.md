@@ -32,3 +32,9 @@ The app uses Task Scheduling in Laravel ( similar to cron jobs) to pull alerts f
     ```bash
         php artisan schedule:work
     ```
+
+# Ethoca Push Config 
+- The Defualt route for ethoca push is `/EthocaAlertNotification` this is the endpoint where ethoca will send the alerts to.
+  - If you wish to change it please Follow these steps;
+  - Change the route in [web.php](routes\web.php#L35) to your desired route 
+  - add this route to [VerifyCsrfToken.php](app/Http/Middleware/VerifyCsrfToken.php#L15)
