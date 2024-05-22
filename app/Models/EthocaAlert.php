@@ -33,6 +33,19 @@ class EthocaAlert extends Model
     {
         return $this->belongsTo(WebhookCall::class);
     }
+
+    public function webhookCalls(): HasMany
+    {
+        return $this->hasMany(WebhookCall::class, 'ethoca_id', 'ethoca_id');
+    }
+    public function webhooksErrors(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->webhookCalls()->where('is_success', false)->get();
+            }
+        );
+    }
     public function crmActions(): HasMany
     {
         return $this->hasMany(CrmAction::class);
