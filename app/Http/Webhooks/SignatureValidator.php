@@ -13,7 +13,8 @@ class SignatureValidator implements SpatieSignatureValidator
         if (env('APP_ENV') == "local") {
             return true;
         }
-        if ($request->header('Authorization') == env('WEBHOOK_CLIENT_SECRET')) {
+        $authToken = "Basic " . env('WEBHOOK_CLIENT_SECRET');
+        if ($request->header('Authorization') == $authToken) {
             return true;
         }
         return false;
