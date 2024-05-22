@@ -4,12 +4,14 @@ namespace App\Models;
 
 use App\Models\Traits\HasError;
 use Database\Factories\AlertsFactory;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Spatie\WebhookClient\Models\WebhookCall;
 
 class EthocaAlert extends Model
 {
@@ -27,6 +29,10 @@ class EthocaAlert extends Model
         return $this->belongsTo(EthocaResponse::class);
     }
 
+    public function webhookCall(): BelongsTo
+    {
+        return $this->belongsTo(WebhookCall::class);
+    }
     public function crmActions(): HasMany
     {
         return $this->hasMany(CrmAction::class);
