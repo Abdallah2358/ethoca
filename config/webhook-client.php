@@ -2,7 +2,11 @@
 use App\Http\Webhooks\AlertNotification\SignatureValidator as ANSignatureValidator;
 use App\Http\Webhooks\AlertNotification\WebhookProfile as ANWebhookProfile;
 use App\Http\Webhooks\AlertNotification\RespondsToWebhook as ANRespondsToWebhook;
-use App\Jobs\ProcessWebhookJob as ANProcessWebhookJob;
+use App\Jobs\ANProcessWebhookJob;
+use App\Http\Webhooks\CrmAction\SignatureValidator as CrmSignatureValidator;
+use App\Http\Webhooks\CrmAction\WebhookProfile as CrmWebhookProfile;
+use App\Http\Webhooks\CrmAction\RespondsToWebhook as CrmRespondsToWebhook;
+use App\Jobs\CrmProcessWebhookJob;
 
 return [
     'configs' => [
@@ -10,16 +14,16 @@ return [
             'name' => 'CRM-Action',
             'signing_secret' => env('WEBHOOK_CLIENT_SECRET'),
             'signature_header_name' => 'Signature',
-            'signature_validator' => SignatureValidator::class,
-            'webhook_profile' => WebhookProfile::class,
-            'webhook_response' => RespondsToWebhook::class,
+            'signature_validator' => CrmSignatureValidator::class,
+            'webhook_profile' => CrmWebhookProfile::class,
+            'webhook_response' => CrmRespondsToWebhook::class,
             'webhook_model' => \Spatie\WebhookClient\Models\WebhookCall::class,
             'store_headers' => [
                 // 'Authorization',
                 // 'php-auth-user',
                 // 'php-auth-pw',
             ],
-            'process_webhook_job' => ProcessWebhookJob::class,
+            'process_webhook_job' => CrmProcessWebhookJob::class,
 
         ],
         [
