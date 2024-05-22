@@ -25,7 +25,7 @@ class ProcessWebhookJob extends SpatieProcessWebhookJob
      */
     public function handle(): void
     {
-        //
-        // dd("Hello");
+
+        // response()->json($this->webhookCall->payload);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+use App\Http\Webhooks\RespondsToWebhook;
 use App\Http\Webhooks\SignatureValidator;
 use App\Http\Webhooks\WebhookProfile;
 use App\Jobs\ProcessWebhookJob;
@@ -38,7 +39,7 @@ return [
             /*
              * This class determines the response on a valid webhook call.
              */
-            'webhook_response' => \Spatie\WebhookClient\WebhookResponse\DefaultRespondsTo::class,
+            'webhook_response' => RespondsToWebhook::class,
 
             /*
              * The classname of the model to be used to store webhook calls. The class should
