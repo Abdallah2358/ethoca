@@ -8,8 +8,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('webhook_calls', function (Blueprint $table) {
-            $table->bigIncrements('id');
-
+            $table->id();
             $table->string('name')->index()->default('default');
             $table->string('url');
             $table->json('headers')->nullable();
