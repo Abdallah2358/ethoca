@@ -11,7 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob as SpatieProcessWebhookJob;
 use Spatie\WebhookClient\Models\WebhookCall;
 
-class ProcessWebhookJob extends SpatieProcessWebhookJob
+class ANProcessWebhookJob extends SpatieProcessWebhookJob
 {
 
     /**
