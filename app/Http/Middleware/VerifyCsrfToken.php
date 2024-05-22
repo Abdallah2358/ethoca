@@ -12,6 +12,6 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        'EthocaAlertNotification',
+        env('ETHOCA_WEBHOOK_ENDPOINT', 'EthocaAlertNotification'),
     ];
 }
