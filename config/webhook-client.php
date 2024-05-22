@@ -54,7 +54,9 @@ return [
              * To store all headers, set this value to `*`.
              */
             'store_headers' => [
-
+                // 'Authorization',
+                // 'php-auth-user',
+                // 'php-auth-pw',
             ],
 
             /*
