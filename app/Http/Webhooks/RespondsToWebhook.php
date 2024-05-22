@@ -8,9 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RespondsToWebhook implements SpatieRespondsToWebhook
 {
-    public function respondToValidWebhook(Request $request, WebhookConfig $config) : Response
+    public function respondToValidWebhook(Request $request, WebhookConfig $config): Response
     {
         // Handle the incoming webhook
-        return response()->json(['message' => 'Webhook received']);
+        return response()->json(['ethoca_id' => $request->input('ethoca_id'), 'status' => 'received']);
     }
 }
