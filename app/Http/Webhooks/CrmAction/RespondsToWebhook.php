@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Webhooks;
+namespace App\Http\Webhooks\CrmAction;
 
 use Illuminate\Http\Request;
 use Spatie\WebhookClient\WebhookConfig;

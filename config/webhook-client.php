@@ -1,17 +1,33 @@
 <?php
-use App\Http\Webhooks\RespondsToWebhook;
-use App\Http\Webhooks\SignatureValidator;
-use App\Http\Webhooks\WebhookProfile;
-use App\Jobs\ProcessWebhookJob;
+use App\Http\Webhooks\AlertNotification\SignatureValidator as ANSignatureValidator;
+use App\Http\Webhooks\AlertNotification\WebhookProfile as ANWebhookProfile;
+use App\Http\Webhooks\AlertNotification\RespondsToWebhook as ANRespondsToWebhook;
+use App\Jobs\ProcessWebhookJob as ANProcessWebhookJob;
 
 return [
     'configs' => [
+        [
+            'name' => 'CRM-Action',
+            'signing_secret' => env('WEBHOOK_CLIENT_SECRET'),
+            'signature_header_name' => 'Signature',
+            'signature_validator' => SignatureValidator::class,
+            'webhook_profile' => WebhookProfile::class,
+            'webhook_response' => RespondsToWebhook::class,
+            'webhook_model' => \Spatie\WebhookClient\Models\WebhookCall::class,
+            'store_headers' => [
+                // 'Authorization',
+                // 'php-auth-user',
+                // 'php-auth-pw',
+            ],
+            'process_webhook_job' => ProcessWebhookJob::class,
+
+        ],
         [
             /*
              * This package supports multiple webhook receiving endpoints. If you only have
              * one endpoint receiving webhooks, you can use 'default'.
              */
-            'name' => 'default',
+            'name' => 'Ethoca-Alert-Notification',
 
             /*
              * We expect that every webhook call will be signed using a secret. This secret
@@ -29,17 +45,17 @@ return [
              *
              * It should implement \Spatie\WebhookClient\SignatureValidator\SignatureValidator
              */
-            'signature_validator' => SignatureValidator::class,
+            'signature_validator' => ANSignatureValidator::class,
 
             /*
              * This class determines if the webhook call should be stored and processed.
              */
-            'webhook_profile' => WebhookProfile::class,
+            'webhook_profile' => ANWebhookProfile::class,
 
             /*
              * This class determines the response on a valid webhook call.
              */
-            'webhook_response' => RespondsToWebhook::class,
+            'webhook_response' => ANRespondsToWebhook::class,
 
             /*
              * The classname of the model to be used to store webhook calls. The class should
@@ -64,7 +80,7 @@ return [
              *
              * This should be set to a class that extends \Spatie\WebhookClient\Jobs\ProcessWebhookJob.
              */
-            'process_webhook_job' => ProcessWebhookJob::class,
+            'process_webhook_job' => ANProcessWebhookJob::class,
         ],
     ],
 

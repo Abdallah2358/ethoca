@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Webhooks;
+namespace App\Http\Webhooks\AlertNotification;
 
 use Exception;
 use Illuminate\Http\Request;
@@ -15,3 +15,4 @@ class WebhookProfile implements SpatieWebhookProfile
         return  $prof->shouldProcess($request);
     }
 }
+

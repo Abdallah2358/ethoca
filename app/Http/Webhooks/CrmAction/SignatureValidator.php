@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Webhooks;
+namespace App\Http\Webhooks\CrmAction;
 
 use Spatie\WebhookClient\SignatureValidator\SignatureValidator as SpatieSignatureValidator;
 use Illuminate\Http\Request;
