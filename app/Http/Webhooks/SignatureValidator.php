@@ -10,7 +10,13 @@ class SignatureValidator implements SpatieSignatureValidator
     public function isValid(Request $request, WebhookConfig $config): bool
     {
         # TODO : Add Auth logic here
-        return true;
+        if (env('APP_ENV') == "local") {
+            return true;
+        }
+        if ($request->header('Authorization') == env('WEBHOOK_CLIENT_SECRET')) {
+            return true;
+        }
+        return false;
     }
 
 }
