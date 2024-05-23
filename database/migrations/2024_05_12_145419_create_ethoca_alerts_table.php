@@ -2,6 +2,7 @@
 
 use App\Models\CrmTransaction;
 use App\Models\EthocaResponse;
+use App\Models\Merchant;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,12 +19,13 @@ return new class extends Migration {
             $table->foreignIdFor(EthocaResponse::class)->comment('Associated Response ID')->nullable()->default(null);
             $table->foreignIdFor(WebhookCall::class)->comment('Associated WebHookCall')->nullable()->default(null);
             $table->foreignIdFor(CrmTransaction::class)->comment('CRM Transaction ID')->index()->nullable()->default(null);
+            $table->foreignIdFor(Merchant::class);
             $table->boolean('is_handled')->comment('This flag is raised when the CRM is done handling this alert and waiting update')->index()->default(0);
             $table->boolean('is_updated')->comment('This flag is raised when the alert is successfully state updated with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
             $table->boolean('is_ack')->comment('This flag is raised when the alert is successfully Acknowledged with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
             $table->string('ethoca_id', 25)->comment('Ethoca generated unique ID for the alert')->index()->nullable()->default(null);
             $table->string('type', 30)->comment('The alert type: sourced from issuer/cardscheme or dispute');
-            $table->dateTime('alert_timestamp',3)->comment('The date and time the alert was available to send in the member’s time zone');
+            $table->dateTime('alert_timestamp', 3)->comment('The date and time the alert was available to send in the member’s time zone');
             $table->string('age', 50)->comment('Numeric age of the alert. It is the number of hours between the transaction date/time (authorisation date/time) and the AlertTimestamp');
             $table->string('issuer', 100)->comment('The name of the card issuer');
             $table->string('card_number', 19)->comment('Numeric card number. This will be provided unmasked / masked depending on the member’s Ethoca account settings.');
