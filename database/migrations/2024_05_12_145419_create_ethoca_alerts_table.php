@@ -20,9 +20,10 @@ return new class extends Migration {
             $table->foreignIdFor(WebhookCall::class)->comment('Associated WebHookCall')->nullable()->default(null);
             $table->foreignIdFor(CrmTransaction::class)->comment('CRM Transaction ID')->index()->nullable()->default(null);
             $table->foreignIdFor(Merchant::class);
-            $table->boolean('is_handled')->comment('This flag is raised when the CRM is done handling this alert and waiting update')->index()->default(0);
-            $table->boolean('is_updated')->comment('This flag is raised when the alert is successfully state updated with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
-            $table->boolean('is_ack')->comment('This flag is raised when the alert is successfully Acknowledged with ethoca')->index()->default(0); # TODO : Check if it needs to be an enum instead
+            $table->boolean('is_handled')->index()->default(false)->comment('This flag is raised when the CRM is done handling this alert and waiting update');
+            $table->boolean('is_paid')->default(false)->index()->comment('This flag is raised when the alert is successfully paid');
+            $table->boolean('is_updated')->default(false)->index()->comment('This flag is raised when the alert is successfully state updated with ethoca'); # TODO : Check if it needs to be an enum instead
+            $table->boolean('is_ack')->default(false)->index()->comment('This flag is raised when the alert is successfully Acknowledged with ethoca'); # TODO : Check if it needs to be an enum instead
             $table->string('ethoca_id', 25)->comment('Ethoca generated unique ID for the alert')->index()->nullable()->default(null);
             $table->string('type', 30)->comment('The alert type: sourced from issuer/cardscheme or dispute');
             $table->dateTime('alert_timestamp', 3)->comment('The date and time the alert was available to send in the member’s time zone');
