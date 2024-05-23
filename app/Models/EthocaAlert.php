@@ -65,7 +65,10 @@ class EthocaAlert extends Model
     {
         return $this->hasMany(EthocaUpdate::class);
     }
-
+    public function merchant(): BelongsTo
+    {
+        return $this->belongsTo(Merchant::class);
+    }
     /**
      * Create a new factory instance for the model.
      */
