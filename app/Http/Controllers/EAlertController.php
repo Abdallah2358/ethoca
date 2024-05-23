@@ -32,6 +32,12 @@ class EAlertController extends Controller
     {
         return view('alerts.companies.index');
     }
+
+    function companiesData()
+    {
+        $companies = Company::all();
+        return DataTables::of($companies)->toJson();
+    }
     function company(Company $company)
     {
         return view('alerts.companies.show', ['company' => $company]);
@@ -41,6 +47,7 @@ class EAlertController extends Controller
         $merchants = $company->alerts();
         return DataTables::of($merchants)->toJson();
     }
+
     function merchants()
     {
         return view('alerts.merchants.index');

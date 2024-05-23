@@ -10,7 +10,7 @@ class Company extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['alerts', 'merchants_count'];
+    protected $appends = ['alerts', 'merchants_count', 'alerts_count'];
     public function merchants()
     {
         return $this->hasMany(Merchant::class);
@@ -27,6 +27,14 @@ class Company extends Model
                     }
                 );
                 return $alerts;
+            }
+        );
+    }
+    public function alertsCount(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->merchants()->get()->sum('alerts_count');
             }
         );
     }

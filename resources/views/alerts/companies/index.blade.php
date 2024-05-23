@@ -3,16 +3,15 @@
 @section('content')
     <div class="container">
         <div class="card">
-            <div class="card-header">Merchants Alerts Table</div>
+            <div class="card-header">LLC Alerts Table</div>
             <div class="card-body">
                 <table id="myTable" class="display resposive nowrap" style="width: 100%">
                     <thead>
                         <tr>
                             <th>Id</th>
-                            <th>Discriptor</th>
-                            <th>Parent LLC</th>
+                            <th>Name</th>
+                            <th>Merchants Count</th>
                             <th>Alerts Count</th>
-
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -29,22 +28,15 @@
     <script>
         const table = $('#myTable');
         table.DataTable({
-            ajax: "{{ route('alerts.merchants.data') }}",
+            ajax: "{{ route('alerts.companies.data') }}",
             columns: [{
                     data: 'id',
                 },
                 {
-                    data: 'descriptor'
+                    data: 'name'
                 },
                 {
-                    data: 'company_name',
-                    render: function(data, type, row) {
-                        return data ?
-                            `<a href="{{ route('companies.show', '') }}/${row.company_id}" class="link-dark text-decoration-none" >${data} <i class="bi bi-box-arrow-up-right" style="font-size: 0.73rem;"></i></a>` :
-                            'N/A';
-                    },
-                    name: 'company_name'
-
+                    data: 'merchants_count'
                 },
                 {
                     data: 'alerts_count'
@@ -52,7 +44,7 @@
                 {
                     data: 'id',
                     render: function(data, type, row) {
-                        return `<a href="{{ route('alerts.merchants.show', '') }}/${data}" hover="Show Merchant Alerts"><i class="bi bi-eye"></i></a>`;
+                        return `<a href="{{ route('alerts.companies.show', '') }}/${data}" hover="Show Merchant Alerts"><i class="bi bi-eye"></i></a>`;
                     }
                 },
             ],
