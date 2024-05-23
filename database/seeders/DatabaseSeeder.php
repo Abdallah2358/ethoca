@@ -15,6 +15,7 @@ use App\Models\EthocaResponse;
 use App\Models\EthocaUpdate;
 use App\Models\Merchant;
 use Database\Factories\AcknowledgementFactory;
+use Database\Factories\AlertsFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -46,12 +47,18 @@ class DatabaseSeeder extends Seeder
 
         $companies = collect([]);
 
-        for ($i = 0; $i < 10; $i++) {
-            Company::factory(10)->has(Merchant::factory(fake()->randomNumber(1, 10)))->create();
+        // $merchants =Merchant::all();
+        for ($i = 0; $i < 100; $i++) {
+            $companies->push(Company::factory()->has(Merchant::factory(fake()->randomNumber(1, 10)))->create());
         }
-        $merchants = $companies->map(function ($company) {
+        // $companies = Company::all();
+        $merchants = $companies->flatMap(function ($company) {
             return $company->merchants;
-        })->collapse();
+        });
+        // return;
+        foreach ($merchants as $merchant) {
+            EthocaAlert::factory(fake()->randomNumber(1, 10))->for($merchant)->create();
+        }
         // return;
         $this->call([
             TransactionSeeder::class,

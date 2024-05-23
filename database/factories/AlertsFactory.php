@@ -20,8 +20,9 @@ class AlertsFactory extends Factory
     {
 
         return [
-            'ethoca_response_id' => fake()->numberBetween(1, 10),
-            'crm_transaction_id' => fake()->numberBetween(1, 10000),
+            'ethoca_response_id' => null,
+            'crm_transaction_id' => null,
+            'merchant_id' => null,
             'is_handled' => false,
             'is_updated' => false,
             'is_ack' => false,
@@ -46,7 +47,7 @@ class AlertsFactory extends Factory
             'source' => fake()->randomElement(['issuer', 'other']),
             'auth_code' => fake()->regexify('[A-Z0-9]{8}'),
             'merchant_member_name' => fake()->company(),
-            'ethoca_transaction_id' => fake()->unique()->regexify('[A-Za-z0-9]{65}'),
+            'transaction_id' => fake()->unique()->regexify('[A-Za-z0-9]{65}'),
             'chargeback_reason_code' => fake()->regexify('[A-Za-z0-9]{5,30}'),
             'chargeback_amount' => fake()->randomFloat(2, 1, 10000),
             'chargeback_currency' => fake()->currencyCode(),
