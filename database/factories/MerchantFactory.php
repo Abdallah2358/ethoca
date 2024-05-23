@@ -17,7 +17,8 @@ class MerchantFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'descriptor' => fake()->company(),
+            'mcc' => fake()->regexify('[0-9]{4}'),
         ];
     }
 }

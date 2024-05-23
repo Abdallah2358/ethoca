@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Company;
 use App\Models\CrmAction;
 use App\Models\CrmTransaction;
 use App\Models\EthocaAcknowledgement;
@@ -12,6 +13,7 @@ use App\Models\EthocaError;
 use App\Models\EthocaRequest;
 use App\Models\EthocaResponse;
 use App\Models\EthocaUpdate;
+use App\Models\Merchant;
 use Database\Factories\AcknowledgementFactory;
 use Illuminate\Database\Seeder;
 
@@ -42,6 +44,15 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
 
+        $companies = collect([]);
+
+        for ($i = 0; $i < 10; $i++) {
+            Company::factory(10)->has(Merchant::factory(fake()->randomNumber(1, 10)))->create();
+        }
+        $merchants = $companies->map(function ($company) {
+            return $company->merchants;
+        })->collapse();
+        // return;
         $this->call([
             TransactionSeeder::class,
         ]);
