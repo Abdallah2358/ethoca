@@ -50,6 +50,11 @@ Route::get('alerts/merchants/data', [EAlertController::class, 'merchantsData'])-
 Route::get('alerts/merchants/{merchant}', [EAlertController::class, 'merchant'])->name('alerts.merchants.show');
 Route::get('alerts/merchants', [EAlertController::class, 'merchants'])->name('alerts.merchants.index');
 
+Route::get('alerts/companies/{company}/data', [EAlertController::class, 'companyData'])->name('alerts.company.data');
+Route::get('alerts/companies/data', [EAlertController::class, 'companiesData'])->name('alerts.companies.data');
+Route::get('alerts/companies/{company}', [EAlertController::class, 'company'])->name('alerts.companies.show');
+Route::get('alerts/companies', [EAlertController::class, 'companies'])->name('alerts.companies.index');
+
 Route::resource('alerts', EAlertController::class);
 Route::get('alerts-data', [EAlertController::class, 'data'])->name('alerts.data');
 
