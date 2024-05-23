@@ -10,8 +10,8 @@
                         <tr>
                             <th>Id</th>
                             <th>Discriptor</th>
-                            <th>MCC</th>
-                            {{-- <th>Alerts Count</th> --}}
+                            <th>Company</th>
+                            <th>Alerts Count</th>
 
                             <th>Actions</th>
                         </tr>
@@ -46,7 +46,17 @@
                     data: 'descriptor'
                 },
                 {
-                    data: 'mcc'
+                    data: 'company_name',
+                    render: function(data, type, row) {
+                        return data ?
+                            `<a href="{{ route('companies.show', '') }}/${row.company_id}" class="link-dark text-decoration-none" >${data} <i class="bi bi-box-arrow-up-right" style="font-size: 0.73rem;"></i></a>` :
+                            'N/A';
+                    },
+                    name: 'company_name'
+
+                },
+                {
+                    data: 'alerts_count'
                 },
                 {
                     data: 'id',
@@ -55,33 +65,41 @@
                     }
                 },
             ],
-            // columnDefs: [{
-            //     searchPanes: {
-            //         show: true,
-            //         initCollapsed: true,
+            columnDefs: [{
+                    searchPanes: {
+                        show: true,
+                        initCollapsed: true,
+                    },
+                    target: 'company_name:name',
+                },
+                {
+                    searchPanes: {
+                        show: false,
+                        initCollapsed: true,
+                    },
+                    targets: '_all'
+                },
+            ],
+            lengthMenu: [10, 25, 50, {
+                label: 'All',
+                value: -1
+            }],
+            layout: {
+                top: {
 
-            //     },
-            //     targets: '_all'
-            //     // targets: [1, 2],
-            // }, ],
-            // lengthMenu: [10, 25, 50, {
-            //     label: 'All',
-            //     value: -1
-            // }],
-            // layout: {
-            //     topStart: {
-            //         buttons: ['pageLength', {
-            //             extend: 'searchPanes',
-            //             text: 'Filter'
-
-            //         }, 'pdf', 'excel', 'print']
-            //     },
-
-            // },
+                    searchPanes: {
+                        dtOpts: {
+                            dom: 'Pfrtip',
+                        }
+                    },
+                },
+                bottom: {
+                    buttons: ['pdf', 'excel', 'print'],
+                },
+            },
             // searchPanes: {
             //     order:['Email','Name']
             // }
-
         });
     </script>
 @endpush

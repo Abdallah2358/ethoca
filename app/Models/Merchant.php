@@ -10,7 +10,7 @@ class Merchant extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
+    protected $appends = ['alerts_count'];
     public function company()
     {
         return $this->belongsTo(Company::class);
@@ -19,5 +19,13 @@ class Merchant extends Model
     public function alerts(): HasMany
     {
         return $this->hasMany(EthocaAlert::class);
+    }
+    public function getAlertsCountAttribute(): int
+    {
+        return $this->alerts()->count();
+    }
+    public function getCompanyNameAttribute(): string
+    {
+        return $this->company->name;
     }
 }

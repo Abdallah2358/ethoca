@@ -52,8 +52,11 @@ class EAlertController extends Controller
 
     function merchantsData()
     {
+        $companies = Company::all('id', 'name');
         $merchants = Merchant::query();
-        return DataTables::of($merchants)->toJson();
+        return DataTables::of($merchants)->addColumn('company_name', function ($merchant) use ($companies) {
+            return $companies->where('id', $merchant->company_id)->first()->name;
+        })->toJson();
     }
     function merchantData(Merchant $merchant)
     {
