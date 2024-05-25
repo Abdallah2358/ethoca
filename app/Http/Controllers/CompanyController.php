@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 
 class CompanyController extends Controller
 {
@@ -36,9 +37,14 @@ class CompanyController extends Controller
      */
     public function show(Company $company)
     {
-        //
+        return view('companies.show', compact('company'));
     }
 
+    function merchantsData(Company $company)
+    {
+        $merchants = $company->merchants()->getQuery();
+        return DataTables::of($merchants)->toJson();
+    }
     /**
      * Show the form for editing the specified resource.
      */
