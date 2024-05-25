@@ -16,10 +16,11 @@ return new class extends Migration {
     {
         Schema::create('ethoca_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EthocaResponse::class)->comment('Associated Response ID')->nullable()->default(null);
-            $table->foreignIdFor(WebhookCall::class)->comment('Associated WebHookCall')->nullable()->default(null);
-            $table->foreignIdFor(CrmTransaction::class)->comment('CRM Transaction ID')->index()->nullable()->default(null);
-            $table->foreignIdFor(Merchant::class);
+            $table->foreignIdFor(EthocaResponse::class)->nullable()->default(null)->comment('Associated Response ID');
+            $table->foreignIdFor(WebhookCall::class)->nullable()->default(null)->comment('Associated WebHookCall');
+            $table->foreignIdFor(CrmTransaction::class)->nullable()->default(null)->comment('CRM Transaction ID');
+            $table->foreignIdFor(Merchant::class)->nullable()->default(null);
+            $table->integer('crm_customer_id')->index()->nullable()->default(null)->comment('CRM Customer ID');
             $table->boolean('is_handled')->index()->default(false)->comment('This flag is raised when the CRM is done handling this alert and waiting update');
             $table->boolean('is_paid')->default(false)->index()->comment('This flag is raised when the alert is successfully paid');
             $table->boolean('is_updated')->default(false)->index()->comment('This flag is raised when the alert is successfully state updated with ethoca'); # TODO : Check if it needs to be an enum instead
