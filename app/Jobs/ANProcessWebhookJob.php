@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\EthocaAlert;
+use App\Models\EthocaError;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -33,9 +34,20 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
             $payload['alert_timestamp'] = date_format(date_create($payload['alert_timestamp']), 'Y-m-d\TH:i:s.v');
             $payload['transaction_timestamp'] = date_format(date_create($payload['transaction_timestamp']), 'Y-m-d\TH:i:s.v');
             $this->webhookCall->ethoca_id = $ethoca_id;
-            $alert = EthocaAlert::create($payload);
-            $alert->webhookCall()->associate($this->webhookCall);
-            $alert->save();
+            $alert = EthocaAlert::where('ethoca_id', $ethoca_id);
+            if ($alert->exists()) {
+                $alert = $alert->first();
+                EthocaError::create([
+                    'ethoca_id' => $ethoca_id,
+                    'code' => 'DUP_ALERT',
+                    'description' => 'Duplicate Alert',
+                    'Notes' => 'Ethoca Alert #' . $ethoca_id . ' already exists in the system.',
+                ]);
+            } else {
+                $alert = new EthocaAlert($payload);
+                $alert->webhookCall()->associate($this->webhookCall);
+                $alert->save();
+            }
             $this->webhookCall->is_success = true;
             $this->webhookCall->save();
         } catch (\Throwable $th) {
