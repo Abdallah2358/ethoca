@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Traits\HasError;
 use Database\Factories\AlertsFactory;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -166,4 +167,34 @@ class EthocaAlert extends Model
         );
     }
     #endregion
+    public static function merchant_handled_alerts($merchant_id): Collection
+    {
+        return self::where('merchant_id', $merchant_id)->where('is_handled', true)->get();
+    }
+    public static function merchant_unhandled_alerts($merchant_id): Collection
+    {
+        return self::where('merchant_id', $merchant_id)->where('is_handled', false)->get();
+    }
+    public static function merchant_data($merchant_id): array
+    {
+        $merchant_alerts = self::where('merchant_id', $merchant_id)->get();
+        $handled_alerts = $merchant_alerts->where('is_handled', true);
+        $unhandled_alerts = $merchant_alerts->where('is_handled', false);
+
+        $handled_alerts_count = $handled_alerts->count();
+        $unhandled_alerts_count = $unhandled_alerts->count();
+        $handled_alerts_total_amount = $handled_alerts->where('is_paid', true)->sum('amount');
+        $formatter = new \NumberFormatter('en_US', \NumberFormatter::CURRENCY_ACCOUNTING);
+        $formattedNumber = $formatter->formatCurrency($handled_alerts_total_amount, 'USD');
+
+        return [
+            'alerts' => $merchant_alerts,
+            'alerts_count' => $merchant_alerts->count(),
+            'handled_alerts' => $handled_alerts->pluck('id'),
+            'unhandled_alerts' => $unhandled_alerts->pluck('id'),
+            'handled_alerts_count' => $handled_alerts_count,
+            'unhandled_alerts_count' => $unhandled_alerts_count,
+            'handled_alerts_total_amount' => $formattedNumber,
+        ];
+    }
 }

@@ -57,7 +57,13 @@ class DatabaseSeeder extends Seeder
         });
         // return;
         foreach ($merchants as $merchant) {
-            EthocaAlert::factory(fake()->randomNumber(1, 10))->for($merchant)->create();
+            for ($i = 0; $i < fake()->randomNumber(1, 8); $i++) {
+                EthocaAlert::factory(1, [
+                    'is_handled' => fake()->boolean(),
+                    'is_updated' => fake()->boolean(),
+                    'is_paid' => fake()->boolean(),
+                ])->for($merchant)->create();
+            }
         }
         // return;
         $this->call([

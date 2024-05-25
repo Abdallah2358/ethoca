@@ -11,8 +11,10 @@
                             <th>Id</th>
                             <th>Discriptor</th>
                             <th>Parent LLC</th>
-                            <th>Alerts Count</th>
-
+                            <th>Alerts</th>
+                            {{-- <th>Handled Alerts</th>
+                            <th>UnHandled Alerts</th> --}}
+                            <th>Total</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -47,7 +49,10 @@
 
                 },
                 {
-                    data: 'alerts_count'
+                    data: 'alerts_data.alerts_count'
+                },
+                {
+                    data: 'alerts_data.handled_alerts_total_amount'
                 },
                 {
                     data: 'id',
