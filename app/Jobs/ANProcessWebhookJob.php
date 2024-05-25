@@ -47,6 +47,7 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
                 $alert = new EthocaAlert($payload);
                 $alert->webhookCall()->associate($this->webhookCall);
                 $alert->save();
+                ProcessAlert::dispatch($alert);
             }
             $this->webhookCall->is_success = true;
             $this->webhookCall->save();
