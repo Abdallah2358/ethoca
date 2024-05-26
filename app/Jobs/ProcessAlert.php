@@ -87,6 +87,7 @@ class ProcessAlert implements ShouldQueue
         $this->alert->is_handled = true;
         $this->alert->save();
 
+        ProcessUpdateEthoca::dispatch($this->alert);
     }
     # TODO: Refactor these methods to be more generic and reduce code duplication
 
