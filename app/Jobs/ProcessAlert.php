@@ -74,11 +74,12 @@ class ProcessAlert implements ShouldQueue
 
         $this->cancelFulfillments();
         $this->addNoteToCustomer('Fulfillments Cancelled');
-        
+
 
     }
     # TODO: Refactor these methods to be more generic and reduce code duplication
 
+    # Todo : Add Functionality to check and make sure that fulfillments are cancelled and all above actions are verified
     protected function findTransaction(EthocaAlert $alert): Collection|bool
     {
         $action = CrmAction::create([
