@@ -79,7 +79,13 @@ class ProcessAlert implements ShouldQueue
         $this->refundTransaction();
         $this->addNoteToCustomer('Transaction Refunded');
 
+        $history = $this->getCustomerHistory();
+        $this->confirmFulfillmentCancel($history);
+        $this->addNoteToCustomer('Fulfillment Cancel Confirmed');
 
+        $this->addNoteToCustomer('Ethoca Alert Processed');
+        $this->alert->is_handled = true;
+        $this->alert->save();
 
     }
     # TODO: Refactor these methods to be more generic and reduce code duplication
