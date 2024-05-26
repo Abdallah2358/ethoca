@@ -22,7 +22,7 @@ class CrmActionEnum
             case self::BlacklistCustomerPhone:
                 return 'Blacklist Customer Phone';
             case self::BlacklistCustomer:
-                return 'Blacklist Customer';
+                return 'Cancel Customer Subscriptions';
             case self::CancelFulfillments:
                 return 'Cancel Fulfillments';
             default:
