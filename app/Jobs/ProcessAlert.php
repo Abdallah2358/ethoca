@@ -21,6 +21,7 @@ class ProcessAlert implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected CrmTransaction $transaction;
+    const KK_API_URL = 'https://api.konnektive.com/';
 
     /**
      * Create a new job instance.
@@ -86,7 +87,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::FindTransaction,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::FindTransaction),
         ]);
-        $response = Http::post('https://api.konnektive.com/transactions/query/', [
+        $response = Http::post(self::KK_API_URL . 'transactions/query/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'txType' => 'SALE',
@@ -126,7 +127,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::GetCustomerData,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerData),
         ]);
-        $response = Http::post('https://api.konnektive.com/customer/query/', [
+        $response = Http::post(self::KK_API_URL . 'customer/query/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $customer_id,
@@ -156,7 +157,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomerEmail,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerEmail),
         ]);
-        $response = Http::post('https://api.konnektive.com/customer/blacklist/', [
+        $response = Http::post(self::KK_API_URL . 'customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'blacklistType' => 'emailAddress',
@@ -186,7 +187,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomerPhone,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerPhone),
         ]);
-        $response = Http::post('https://api.konnektive.com/customer/blacklist/', [
+        $response = Http::post(self::KK_API_URL . 'customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'blacklistType' => 'phoneNumber',
@@ -219,7 +220,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomer,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomer),
         ]);
-        $response = Http::post('https://api.konnektive.com/customer/blacklist/', [
+        $response = Http::post(self::KK_API_URL . 'customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
@@ -252,7 +253,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::CancelFulfillments,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::CancelFulfillments), // 'Cancel Fulfillments
         ]);
-        $response = Http::post('https://api.konnektive.com/fulfillment/update/', [
+        $response = Http::post(self::KK_API_URL . 'fulfillment/update/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'orderId' => $this->transaction->order_id,
@@ -282,7 +283,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::GetCustomerHistory,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerHistory), // 'Get Customer History',
         ]);
-        $response = Http::post('https://api.konnektive.com/customer/history/', [
+        $response = Http::post(self::KK_API_URL . 'customer/history/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
@@ -333,7 +334,7 @@ class ProcessAlert implements ShouldQueue
             'ethoca_alert_id' => $this->alert->id,
             'name' => 'Add Note to Customer',
         ]);
-        $response = Http::post('https://api.konnektive.com/customer/note/', [
+        $response = Http::post(self::KK_API_URL . 'customer/note/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
