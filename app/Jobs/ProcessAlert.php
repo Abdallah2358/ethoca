@@ -38,37 +38,43 @@ class ProcessAlert implements ShouldQueue
     public function handle(): void
     {
         $transaction = $this->findTransaction($this->alert);
-        if ($transaction->isEmpty()) {
-            // Et
+        if (!$transaction) {
             return;
         }
-        $this->transaction = CrmTransaction::create([
-            'ethoca_alert_id' => $this->alert->id,
-            'crm_customer_id' => $this->alert->crm_customer_id,
-            'merchant_id' => $this->alert->merchant_id,
-            'transaction_id' => $transaction['transactionId'],
-            'transaction_timestamp' => $transaction['dateCreated'],
-            'order_id' => $transaction['orderId'],
-            'amount' => $transaction['amount'],
-            'currency' => $transaction['currency'],
-            'status' => $transaction['status'],
-            'auth_code' => $transaction['authCode'],
-            'card_last4' => $this->alert->card_last4,
-            'card_bin' => $this->alert->card_bin,
-            'arn' => $this->alert->arn,
-            'chargeback_reason_code' => $this->alert->chargeback_reason_code,
-            'chargeback_amount' => $this->alert->chargeback_amount,
-            'chargeback_currency' => $this->alert->chargeback_currency,
-        ]);
+        // dd($transaction);
+        $this->transaction = CrmTransaction::create(
+            $transaction->merge([
+                'ethoca_alert_id' => $this->alert->id,
+                'ethoca_id' => $this->alert->ethoca_id,
+            ])->forget('items')->toArray()
+            // [
+            // 'ethoca_alert_id' => $this->alert->id,
+            // 'ethoca_id' => $this->alert->ethoca_id,
+            // 'customerId' => $transaction['customerId'],
+            // 'merchantId' => $transaction['merchantId'],
+            // 'transactionId' => $transaction['transactionId'],
+            // 'dateCreated' => $transaction['dateCreated'],
+            // 'orderId' => $transaction['orderId'],
+            // 'totalAmount' => $transaction['totalAmount'],
+            // 'currencySymbol' => $transaction['currencySymbol'] ,
+            // 'authCode' => $transaction['authCode'],
+            // 'card_last4' => $this->alert->card_last4,
+            // 'card_bin' => $this->alert->card_bin,
+            // 'arn' => $this->alert->arn,
+            // 'chargeback_reason_code' => $this->alert->chargeback_reason_code,
+            // 'chargeback_amount' => $this->alert->chargeback_amount,
+            // 'chargeback_currency' => $this->alert->chargeback_currency,
+            // ]
+        );
 
         $this->addNoteToCustomer();
         $this->addNoteToCustomer("OTP");
         $customer = $this->getCustomerData($this->transaction->crm_customer_id);
+        // dd($customer);
 
-
-        $this->blackListCustomerEmail($customer->email);
+        $this->blackListCustomerEmail($customer['emailAddress']);
         $this->addNoteToCustomer('Email Blacklisted');
-        $this->blackListCustomerPhone($customer->phone);
+        $this->blackListCustomerPhone($customer['phoneNumber']);
         $this->addNoteToCustomer('Phone Blacklisted');
         $this->blackListCustomer();
         $this->addNoteToCustomer('Customer Blacklisted');
@@ -114,11 +120,11 @@ class ProcessAlert implements ShouldQueue
             $action->result = 'Found' . $message['totalResults'] . ' transactions';
             $action->save();
             if ($data->count() > 1) {
-                return $data->sortBy(function ($e) use ($alert) {
+                return collect($data->sortBy(function ($e) use ($alert) {
                     $date = Carbon::parse($e['dateCreated']);
                     $targetDate = Carbon::parse($alert->transaction_timestamp);
                     return $date->diffInDays($targetDate);
-                })->first();
+                })->first());
             }
             return collect($data[0]);
         }
@@ -128,7 +134,7 @@ class ProcessAlert implements ShouldQueue
             'ethoca_id' => $alert->ethoca_id,
             'code' => $response->status(),
             'description' => "Failed to Connect to Konnektive",
-            'data' => $response->json(),
+            'data' => json_encode($response->json()),
         ]);
         return false;
     }
@@ -146,7 +152,7 @@ class ProcessAlert implements ShouldQueue
         ]);
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $message = $response->json()['message'];
-            $data = collect($message['data']);
+            $data = collect($message['data'][0]);
             $action->data = $data->toJson();
             $action->result = 'Found' . $message['totalResults'] . ' customers';
             $action->save();

@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\EthocaAlert;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -12,6 +13,8 @@ return new class extends Migration {
     {
         Schema::create('crm_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(EthocaAlert::class)->nullable()->default(null)->comment('The alert id');
+            $table->string('ethoca_id')->nullable()->default(null)->index()->comment('The Ethoca ID');
             $table->mediumInteger('transactionId')->nullable()->default(null);
             $table->string('parentTxnId', 255)->nullable()->default(null);
             $table->string('merchant', 255)->nullable()->default(null);

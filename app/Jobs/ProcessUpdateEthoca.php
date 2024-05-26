@@ -51,6 +51,7 @@ class ProcessUpdateEthoca implements ShouldQueue
                 'AlertUpdates' => $updates,
             ]
         );
+        dd($response);
         if ($response->Status == 'Success') {
             $this->alert->update(['is_updated' => 1]);
             $this->alert->save();

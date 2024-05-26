@@ -21,6 +21,7 @@ return new class extends Migration {
                 ->nullable()->default(null);
             $table->boolean('is_ack_error')->comment('The flag to indicate if the error is an acknowledgement error specific for alerts')
                 ->default(0)->index();
+            $table->json('data')->nullable()->default(null)->comment('The error data returned by Ethoca');
             $table->timestamps();
         });
 

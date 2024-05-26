@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class CrmTransaction extends Model
 {
     use HasFactory, HasError;
+    protected $guarded = [];
     public function ethocaAlert(): HasOne
     {
         return $this->hasOne(EthocaAlert::class);

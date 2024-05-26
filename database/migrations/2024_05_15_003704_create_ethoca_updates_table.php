@@ -31,7 +31,7 @@ return new class extends Migration {
             $table->dateTime('action_timestamp')->nullable()->default(null)->comment('The date and time the transaction was refunded / action taken as a result of the alert.');
             $table->string('update_comment', 250)->nullable()->default(null)->comment('Comment for the update - Additional comments to be provided with the
              outcome');
-            $table->boolean('status')->comment('The status of the update 1 - success, 0 - failed');
+            $table->boolean('status')->default(0)->comment('The status of the update 1 - success, 0 - failed');
             // we don't need the status field as we can check the is_sent field and for errors we can check the errors table
             // if we get a status failed from ethoca just keep the update record and log the error in the errors table
             $table->boolean('is_sent')->default(0)->index()->comment('This flag is raised when the update is sent to ethoca and received a status success from ethoca');

@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignIdFor(EthocaAlert::class)->comment('Alert id that is caused this action to trigger');
             $table->tinyInteger('code')->nullable()->default(null)->index()->comment("Crm Action Code For This App"); // can be a tiny int
             $table->string('name')->comment("A Descriptive name for action take on CRM");
-            $table->string('link')->comment("Link used to show the action details on CRM");
+            $table->string('link')->nullable()->default(null)->comment("Link used to show the action details on CRM");
             $table->string('status')->default('pending')->comment("Status of the action"); // can be a tiny int
             $table->string('result')->nullable()->default(null)->comment("Status of the action"); // can be a tiny int
             $table->json('data')->nullable()->default(null)->comment("Data related to the action");

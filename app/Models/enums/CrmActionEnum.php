@@ -12,6 +12,7 @@ class CrmActionEnum
     const RefundTransactions = 7;
     const GetCustomerHistory = 8;
 
+    const ConfirmFulfillmentCancel  = 9;
     public static function getActionName($action)
     {
         switch ($action) {
@@ -31,6 +32,8 @@ class CrmActionEnum
                 return 'Refund Transactions';
             case self::GetCustomerHistory:
                 return 'Get Customer History';
+            case self::ConfirmFulfillmentCancel:
+                return 'Confirm Fulfillment Cancel';
             default:
                 return 'Unknown';
         }

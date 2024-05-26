@@ -67,7 +67,7 @@ class EthocaRequest extends Model
         return RequestFactory::new();
     }
 
-    public function generateRequest(\SoapClient $client, $ethoc_function, $ethoca_args, $start = null, $end = null): mixed
+    public static function generateRequest(\SoapClient $client, $ethoc_function, $ethoca_args, $start = null, $end = null): mixed
     {
         $title = 'Ethoca 360 Alerts Request';
         $alert_type = null;
@@ -126,6 +126,16 @@ class EthocaRequest extends Model
                 'code' => 500,
                 'description' => 'Failed to connect to Ethoca 360 Alerts API',
             ]);
+            $response = (object) [
+                'Status' => 'Failed',
+                'Errors' => (object) [
+                    'Error' => (object) [
+                        'code' => 500,
+                        '_' => 'Failed to connect to Ethoca 360 Alerts API',
+                    ]
+                ]
+            ];
+            return $response;
         }
         // save all errors to database
 
