@@ -72,8 +72,13 @@ class ProcessAlert implements ShouldQueue
         $this->addNoteToCustomer('Phone Blacklisted');
         $this->blackListCustomer();
         $this->addNoteToCustomer('Customer Blacklisted');
+
         $this->cancelFulfillments();
         $this->addNoteToCustomer('Fulfillments Cancelled');
+
+        $this->refundTransaction();
+        $this->addNoteToCustomer('Transaction Refunded');
+
 
 
     }
@@ -276,6 +281,36 @@ class ProcessAlert implements ShouldQueue
         return false;
     }
 
+    public function refundTransaction(): bool
+    {
+        $action = CrmAction::create([
+            'ethoca_alert_id' => $this->alert->id,
+            'code' => CrmActionEnum::RefundTransactions,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::RefundTransactions), // 'Refund Transactions',
+        ]);
+        $response = Http::post(self::KK_API_URL . 'transactions/refund/', [
+            'loginId' => env('KONNEKTIVE_LOGIN_ID'),
+            'password' => env('KONNEKTIVE_PASSWORD'),
+            'transactionId' => $this->transaction->transaction_id,
+            'fullRefund' => true,
+            'refundReason' => "Fraudulent Transaction",
+        ]);
+        if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
+            $action->data = $response->json();
+            $action->result = 'Transaction Refunded Successfully';
+            $action->save();
+            return true;
+        }
+        EthocaError::create([
+            'model' => CrmAction::class,
+            'model_id' => $action->id,
+            'ethoca_id' => $this->alert->ethoca_id,
+            'code' => $response->status(),
+            'description' => "Failed to Refund Transaction",
+            'data' => $response->json(),
+        ]);
+        return false;
+    }
     public function getCustomerHistory(): Collection|bool
     {
         $action = CrmAction::create([
