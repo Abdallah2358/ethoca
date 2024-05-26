@@ -10,6 +10,8 @@ class CrmActionEnum
     const BlacklistCustomer = 5;
 
     const CancelFulfillments = 6;
+
+    const GetCustomerHistory = 7;
     public static function getActionName($action)
     {
         switch ($action) {
@@ -25,6 +27,8 @@ class CrmActionEnum
                 return 'Cancel Customer Subscriptions';
             case self::CancelFulfillments:
                 return 'Cancel Fulfillments';
+            case self::GetCustomerHistory:
+                return 'Get Customer History';
             default:
                 return 'Unknown';
         }
