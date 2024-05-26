@@ -309,9 +309,24 @@ class ProcessAlert implements ShouldQueue
 
     protected function confirmFulfillmentCancel(Collection $history): bool
     {
-
+        $action = CrmAction::create([
+            'ethoca_alert_id' => $this->alert->id,
+            'code' => CrmActionEnum::ConfirmFulfillmentCancel,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::ConfirmFulfillmentCancel), // 'Confirm Fulfillment Cancel',
+        ]);
+        $fulfillmentCancelled = false;
+        foreach ($history as $item) {
+            if ($this->isFulfillmentCancelMessage($item['message'], $this->transaction->order_id)) {
+                $fulfillmentCancelled = true;
+                $action->result = 'Fulfillment Cancel Confirmed';
+                $action->save();
+                return true;
+            }
+        }
         return false;
     }
+
+
     protected function addNoteToCustomer($note = null): bool
     {
         $action = CrmAction::create([
@@ -349,5 +364,21 @@ class ProcessAlert implements ShouldQueue
         $initiatedBy = $this->alert->initiated_by;
 
         return "Ethoca Alert: $alertType Alert\n Card Issuer: $cardIssuer\n Amount: $amount\n Transaction Type: $transactionType\n Initiated By: $initiatedBy\n";
+    }
+
+    function isFulfillmentCancelMessage($message, $orderNumber)
+    {
+        // Escape the order number to safely use it in a regex
+        $escapedOrderNumber = preg_quote($orderNumber, '/');
+
+        // Define the regex pattern with the variable order number
+        $pattern = '/^Fulfillment for order ' . $escapedOrderNumber . ' cancelled$/';
+
+        // Check if the message matches the pattern
+        if (preg_match($pattern, $message)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
