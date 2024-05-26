@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\CrmAction;
 use App\Models\CrmTransaction;
+use App\Models\Enums\CrmActionEnum;
 use App\Models\EthocaAlert;
 use App\Models\EthocaError;
 use Carbon\Carbon;
@@ -66,12 +67,10 @@ class ProcessAlert implements ShouldQueue
 
         $this->blackListCustomerEmail($customer->email);
         $this->addNoteToCustomer('Email Blacklisted');
-
         $this->blackListCustomerPhone($customer->phone);
         $this->addNoteToCustomer('Phone Blacklisted');
         $this->blackListCustomer();
         $this->addNoteToCustomer('Customer Blacklisted');
-
         $this->cancelFulfillments();
         $this->addNoteToCustomer('Fulfillments Cancelled');
 
@@ -84,7 +83,8 @@ class ProcessAlert implements ShouldQueue
     {
         $action = CrmAction::create([
             'ethoca_alert_id' => $alert->id,
-            'name' => 'Find Transaction',
+            'code' => CrmActionEnum::FindTransaction,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::FindTransaction),
         ]);
         $response = Http::post('https://api.konnektive.com/transactions/query/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
@@ -123,7 +123,8 @@ class ProcessAlert implements ShouldQueue
     {
         $action = CrmAction::create([
             'ethoca_alert_id' => $this->alert->id,
-            'name' => 'Get Customer Data',
+            'code' => CrmActionEnum::GetCustomerData,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerData),
         ]);
         $response = Http::post('https://api.konnektive.com/customer/query/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
@@ -152,7 +153,8 @@ class ProcessAlert implements ShouldQueue
     {
         $action = CrmAction::create([
             'ethoca_alert_id' => $this->alert->id,
-            'name' => 'Blacklist Customer Email',
+            'code' => CrmActionEnum::BlacklistCustomerEmail,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerEmail),
         ]);
         $response = Http::post('https://api.konnektive.com/customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
@@ -181,7 +183,8 @@ class ProcessAlert implements ShouldQueue
     {
         $action = CrmAction::create([
             'ethoca_alert_id' => $this->alert->id,
-            'name' => 'Blacklist Customer Phone',
+            'code' => CrmActionEnum::BlacklistCustomerPhone,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerPhone),
         ]);
         $response = Http::post('https://api.konnektive.com/customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
@@ -213,7 +216,8 @@ class ProcessAlert implements ShouldQueue
          */
         $action = CrmAction::create([
             'ethoca_alert_id' => $this->alert->id,
-            'name' => 'Cancel Customer Subscriptions',
+            'code' => CrmActionEnum::BlacklistCustomer,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomer),
         ]);
         $response = Http::post('https://api.konnektive.com/customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
@@ -245,7 +249,8 @@ class ProcessAlert implements ShouldQueue
          */
         $action = CrmAction::create([
             'ethoca_alert_id' => $this->alert->id,
-            'name' => 'Cancel Fulfillments',
+            'code' => CrmActionEnum::CancelFulfillments,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::CancelFulfillments), // 'Cancel Fulfillments
         ]);
         $response = Http::post('https://api.konnektive.com/fulfillment/update/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
@@ -267,6 +272,44 @@ class ProcessAlert implements ShouldQueue
             'description' => "Failed to Cancel Fulfillments",
             'data' => $response->json(),
         ]);
+        return false;
+    }
+
+    public function getCustomerHistory(): Collection|bool
+    {
+        $action = CrmAction::create([
+            'ethoca_alert_id' => $this->alert->id,
+            'code' => CrmActionEnum::GetCustomerHistory,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerHistory), // 'Get Customer History',
+        ]);
+        $response = Http::post('https://api.konnektive.com/customer/history/', [
+            'loginId' => env('KONNEKTIVE_LOGIN_ID'),
+            'password' => env('KONNEKTIVE_PASSWORD'),
+            'customerId' => $this->transaction->crm_customer_id,
+            'startDate' => Carbon::now()->subDays(2)->toDateString(),
+        ]);
+        if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
+            $message = $response->json()['message'];
+            $data = collect($message['data']);
+            $action->data = $data->toJson();
+            $action->result = 'Found' . $message['totalResults'] . ' history items';
+            $action->save();
+            return $data;
+        }
+        EthocaError::create([
+            'model' => CrmAction::class,
+            'model_id' => $action->id,
+            'ethoca_id' => $this->alert->ethoca_id,
+            'code' => $response->status(),
+            'description' => "Failed to Get Customer History",
+            'data' => $response->json(),
+        ]);
+        return false;
+    }
+
+    protected function confirmFulfillmentCancel(Collection $history): bool
+    {
+
         return false;
     }
     protected function addNoteToCustomer($note = null): bool
