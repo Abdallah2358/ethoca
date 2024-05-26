@@ -27,7 +27,7 @@ class ProcessAlert implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        public EthocaAlert $alert
+        protected EthocaAlert $alert
     ) {
         //
     }
