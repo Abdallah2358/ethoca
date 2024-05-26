@@ -20,7 +20,9 @@ class ProcessUpdateEthoca implements ShouldQueue
      * Create a new job instance.
      */
     public function __construct(
-        protected EthocaAlert $alert
+        protected EthocaAlert $alert,
+        protected string $outcome = 'stopped',
+        protected string $refunded = 'refunded',
     ) {
         //
     }
@@ -36,8 +38,8 @@ class ProcessUpdateEthoca implements ShouldQueue
             [
                 'ethoca_alert_id' => $this->alert->id,
                 'ethoca_id' => $this->alert->ethoca_id,
-                'outcome' => 'stopped',
-                'refunded' => 'refunded',
+                'outcome' => $this->outcome,
+                'refunded' => $this->refunded,
             ]
         );
         $response = EthocaRequest::generateRequest(
