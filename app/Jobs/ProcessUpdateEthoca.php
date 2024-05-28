@@ -42,6 +42,13 @@ class ProcessUpdateEthoca implements ShouldQueue
                 'refunded' => $this->refunded,
             ]
         );
+        $updates = [
+            [
+                'EthocaID' => $this->alert->ethoca_id,
+                'Outcome' => $this->outcome,
+                'Refunded' => $this->refunded,
+            ],
+        ];
         $response = EthocaRequest::generateRequest(
             $client,
             'Ethoca360AlertsUpdate',
@@ -51,8 +58,15 @@ class ProcessUpdateEthoca implements ShouldQueue
                 'AlertUpdates' => $updates,
             ]
         );
-        dd($response);
-        if ($response->Status == 'Success') {
+        
+        $status = null;
+        if (isset($response->AlertUpdateResponses)) {
+            if (isset($response->AlertUpdateResponses->AlertUpdateResponse)) {
+                $status = $response->AlertUpdateResponses->AlertUpdateResponse->status;
+            }
+        }
+
+        if ($status == 'success') {
             $this->alert->update(['is_updated' => 1]);
             $this->alert->save();
         }
