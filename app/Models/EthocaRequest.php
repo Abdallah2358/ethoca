@@ -94,14 +94,16 @@ class EthocaRequest extends Model
             'search_end_date' => $ethoca_args['SearchEndDate'] ?? null,
         ]);
         try {
-            $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
-            $alert_res_model = EthocaResponse::create([
-                'major_code' => $response->majorCode,
-                'status' => $response->Status,
-                'number_of_alerts' => $response->numberOfAlerts ?? null,
-                'ethoca_request_id' => $ethoca_request->id ?? null,
-            ]);
-            if (isset($response->Errors) && is_array($response->Errors->Error)) {
+        $response = $client->__soapCall($ethoc_function, $ethoca_args, ["trace" => true, "_connection_timeout" => 180]);
+        $alert_res_model = EthocaResponse::create([
+            'major_code' => $response->majorCode,
+            'status' => $response->majorCode == 0 ? 200 : 500,
+            'number_of_alerts' => $response->numberOfAlerts ?? null,
+            'ethoca_request_id' => $ethoca_request->id ?? null,
+        ]);
+
+        if (isset($response->Errors)) {
+            if (is_array($response->Errors->Error)) {
                 foreach ($response->Errors->Error as $error) {
                     EthocaError::create([
                         'model' => EthocaResponse::class,
@@ -118,7 +120,8 @@ class EthocaRequest extends Model
                     'description' => $response->Errors->Error->_,
                 ]);
             }
-            $response->model = $alert_res_model;
+        }
+        $response->model = $alert_res_model;
         } catch (\Throwable $th) {
             EthocaError::create([
                 'model' => EthocaRequest::class,
