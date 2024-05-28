@@ -13,7 +13,6 @@ return new class extends Migration {
     {
         Schema::create('crm_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EthocaAlert::class)->nullable()->default(null)->comment('The alert id');
             $table->string('ethoca_id')->nullable()->default(null)->index()->comment('The Ethoca ID');
             $table->mediumInteger('transactionId')->nullable()->default(null);
             $table->string('parentTxnId', 255)->nullable()->default(null);
@@ -88,6 +87,7 @@ return new class extends Migration {
             $table->string('mcc', 255)->nullable()->default(null);
             $table->timestamps();
         });
+
     }
 
     /**
