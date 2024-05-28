@@ -3,6 +3,7 @@ namespace App\Models\Enums;
 
 class CrmActionEnum
 {
+    const AddNoteToCustomer = 0;
     const FindTransaction = 1;
     const GetCustomerData = 2;
     const BlacklistCustomerEmail = 3;
@@ -11,11 +12,12 @@ class CrmActionEnum
     const CancelFulfillments = 6;
     const RefundTransactions = 7;
     const GetCustomerHistory = 8;
-
     const ConfirmFulfillmentCancel  = 9;
     public static function getActionName($action)
     {
         switch ($action) {
+            case self::AddNoteToCustomer:
+                return 'Add Note To Customer';
             case self::FindTransaction:
                 return 'Find Transaction';
             case self::GetCustomerData:

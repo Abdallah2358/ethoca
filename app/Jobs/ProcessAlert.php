@@ -38,6 +38,7 @@ class ProcessAlert implements ShouldQueue
     public function handle(): void
     {
         $transaction = $this->findTransaction($this->alert);
+        // dd($transaction);
         if (!$transaction) {
             return;
         }
@@ -380,7 +381,8 @@ class ProcessAlert implements ShouldQueue
     {
         $action = CrmAction::create([
             'ethoca_alert_id' => $this->alert->id,
-            'name' => 'Add Note to Customer',
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::AddNoteToCustomer),
+            'code' => CrmActionEnum::AddNoteToCustomer,
         ]);
         $response = Http::post(self::KK_API_URL . 'customer/note/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
