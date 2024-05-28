@@ -17,10 +17,10 @@ return new class extends Migration {
     {
         Schema::create('ethoca_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EthocaResponse::class)->constrained()->nullable()->default(null)->comment('Associated Response ID');
-            $table->foreignIdFor(WebhookCall::class)->constrained()->nullable()->default(null)->comment('Associated WebHookCall');
-            $table->foreignIdFor(CrmTransaction::class)->constrained()->nullable()->default(null)->comment('CRM Transaction ID');
-            $table->foreignIdFor(Merchant::class)->constrained()->nullable()->default(null);
+            $table->foreignIdFor(EthocaResponse::class)->nullable()->default(null)->constrained()->comment('Associated Response ID');
+            $table->foreignIdFor(WebhookCall::class)->nullable()->default(null)->constrained()->comment('Associated WebHookCall');
+            $table->foreignIdFor(CrmTransaction::class)->nullable()->default(null)->constrained()->comment('CRM Transaction ID');
+            $table->foreignIdFor(Merchant::class)->nullable()->default(null)->constrained();
             $table->integer('crm_customer_id')->index()->nullable()->default(null)->comment('CRM Customer ID');
             $table->boolean('is_handled')->index()->default(false)->comment('This flag is raised when the CRM is done handling this alert and waiting update');
             $table->boolean('is_paid')->default(false)->index()->comment('This flag is raised when the alert is successfully paid');
