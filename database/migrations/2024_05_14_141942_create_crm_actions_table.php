@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('crm_actions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EthocaAlert::class)->comment('Alert id that is caused this action to trigger');
+            $table->foreignIdFor(EthocaAlert::class)->constrained()->comment('Alert id that is caused this action to trigger');
             $table->tinyInteger('code')->nullable()->default(null)->index()->comment("Crm Action Code For This App"); // can be a tiny int
             $table->string('name')->comment("A Descriptive name for action take on CRM");
             $table->string('link')->nullable()->default(null)->comment("Link used to show the action details on CRM");

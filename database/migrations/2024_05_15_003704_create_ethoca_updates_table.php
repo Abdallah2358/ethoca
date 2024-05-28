@@ -17,9 +17,9 @@ return new class extends Migration {
         Schema::create('ethoca_updates', function (Blueprint $table) {
             $table->id();
             // update related felids
-            $table->foreignIdFor(EthocaAlert::class)->nullable()->default(null)->comment('The alert id');
-            $table->foreignIdFor(EthocaRequest::class)->nullable()->default(null)->comment('The request id that is used to send this update');
-            $table->foreignIdFor(EthocaResponse::class)->nullable()->default(null)->comment('The Response id that is used to updated this alert_update status');
+            $table->foreignIdFor(EthocaAlert::class)->constrained()->nullable()->default(null)->comment('The alert id');
+            $table->foreignIdFor(EthocaRequest::class)->constrained()->nullable()->default(null)->comment('The request id that is used to send this update');
+            $table->foreignIdFor(EthocaResponse::class)->constrained()->nullable()->default(null)->comment('The Response id that is used to updated this alert_update status');
 
             // redundant field as we can get the alert id from the alert model
             // but it is used to reduce the number of queries since time is more important than space

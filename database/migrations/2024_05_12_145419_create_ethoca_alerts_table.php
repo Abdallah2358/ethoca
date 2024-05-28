@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\CrmTransaction;
+use App\Models\EthocaAlert;
 use App\Models\EthocaResponse;
 use App\Models\Merchant;
 use Illuminate\Database\Migrations\Migration;
@@ -16,10 +17,10 @@ return new class extends Migration {
     {
         Schema::create('ethoca_alerts', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(EthocaResponse::class)->nullable()->default(null)->comment('Associated Response ID');
-            $table->foreignIdFor(WebhookCall::class)->nullable()->default(null)->comment('Associated WebHookCall');
-            $table->foreignIdFor(CrmTransaction::class)->nullable()->default(null)->comment('CRM Transaction ID');
-            $table->foreignIdFor(Merchant::class)->nullable()->default(null);
+            $table->foreignIdFor(EthocaResponse::class)->constrained()->nullable()->default(null)->comment('Associated Response ID');
+            $table->foreignIdFor(WebhookCall::class)->constrained()->nullable()->default(null)->comment('Associated WebHookCall');
+            $table->foreignIdFor(CrmTransaction::class)->constrained()->nullable()->default(null)->comment('CRM Transaction ID');
+            $table->foreignIdFor(Merchant::class)->constrained()->nullable()->default(null);
             $table->integer('crm_customer_id')->index()->nullable()->default(null)->comment('CRM Customer ID');
             $table->boolean('is_handled')->index()->default(false)->comment('This flag is raised when the CRM is done handling this alert and waiting update');
             $table->boolean('is_paid')->default(false)->index()->comment('This flag is raised when the alert is successfully paid');
@@ -50,9 +51,10 @@ return new class extends Migration {
             $table->string('chargeback_reason_code', 30)->comment('The card scheme-specific chargeback reason code which indicates the cardholder’s reason for disputing the transaction.');
             $table->decimal('chargeback_amount', 10, 2)->comment('Chargeback Amount');
             $table->string('chargeback_currency', 3)->comment('Currency for the chargeback currency.');
-
-
             $table->timestamps();
+        });
+        Schema::table('crm_transactions', function (Blueprint $table) {
+            $table->foreignIdFor(EthocaAlert::class)->nullable()->default(null)->constrained()->comment('Ethoca Alert ID');
         });
     }
 
@@ -62,5 +64,9 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::dropIfExists('ethoca_alerts');
+        Schema::table('crm_transactions', function (Blueprint $table) {
+            $table->dropForeign(['ethoca_alert_id']);
+            $table->dropColumn('ethoca_alert_id');
+        });
     }
 };

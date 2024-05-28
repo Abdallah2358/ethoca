@@ -13,7 +13,7 @@ return new class extends Migration {
     {
         Schema::create('merchants', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Company::class);
+            $table->foreignIdFor(Company::class)->constrained();
             $table->string('descriptor');
             $table->string('mcc');
             $table->timestamps();
