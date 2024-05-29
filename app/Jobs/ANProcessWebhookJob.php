@@ -4,13 +4,8 @@ namespace App\Jobs;
 
 use App\Models\EthocaAlert;
 use App\Models\EthocaError;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob as SpatieProcessWebhookJob;
-use Spatie\WebhookClient\Models\WebhookCall;
+
 
 class ANProcessWebhookJob extends SpatieProcessWebhookJob
 {
