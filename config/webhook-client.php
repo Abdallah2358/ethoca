@@ -11,22 +11,6 @@ use App\Jobs\CrmProcessWebhookJob;
 return [
     'configs' => [
         [
-            'name' => 'CRM-Action',
-            'signing_secret' => env('WEBHOOK_CLIENT_SECRET'),
-            'signature_header_name' => 'Signature',
-            'signature_validator' => CrmSignatureValidator::class,
-            'webhook_profile' => CrmWebhookProfile::class,
-            'webhook_response' => CrmRespondsToWebhook::class,
-            'webhook_model' => \Spatie\WebhookClient\Models\WebhookCall::class,
-            'store_headers' => [
-                // 'Authorization',
-                // 'php-auth-user',
-                // 'php-auth-pw',
-            ],
-            'process_webhook_job' => CrmProcessWebhookJob::class,
-
-        ],
-        [
             /*
              * This package supports multiple webhook receiving endpoints. If you only have
              * one endpoint receiving webhooks, you can use 'default'.
@@ -85,6 +69,22 @@ return [
              * This should be set to a class that extends \Spatie\WebhookClient\Jobs\ProcessWebhookJob.
              */
             'process_webhook_job' => ANProcessWebhookJob::class,
+        ],
+        [
+            'name' => 'CRM-Action',
+            'signing_secret' => env('WEBHOOK_CLIENT_SECRET'),
+            'signature_header_name' => 'Signature',
+            'signature_validator' => CrmSignatureValidator::class,
+            'webhook_profile' => CrmWebhookProfile::class,
+            'webhook_response' => CrmRespondsToWebhook::class,
+            'webhook_model' => \Spatie\WebhookClient\Models\WebhookCall::class,
+            'store_headers' => [
+                // 'Authorization',
+                // 'php-auth-user',
+                // 'php-auth-pw',
+            ],
+            'process_webhook_job' => CrmProcessWebhookJob::class,
+
         ],
     ],
 
