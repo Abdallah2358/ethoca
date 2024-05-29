@@ -38,34 +38,14 @@ class ProcessAlert implements ShouldQueue
     public function handle(): void
     {
         $transaction = $this->findTransaction($this->alert);
-        // dd($transaction);
         if (!$transaction) {
             return;
         }
-        // dd($transaction);
         $this->transaction = CrmTransaction::create(
             $transaction->merge([
                 'ethoca_alert_id' => $this->alert->id,
                 'ethoca_id' => $this->alert->ethoca_id,
             ])->forget('items')->toArray()
-            // [
-            // 'ethoca_alert_id' => $this->alert->id,
-            // 'ethoca_id' => $this->alert->ethoca_id,
-            // 'customerId' => $transaction['customerId'],
-            // 'merchantId' => $transaction['merchantId'],
-            // 'transactionId' => $transaction['transactionId'],
-            // 'dateCreated' => $transaction['dateCreated'],
-            // 'orderId' => $transaction['orderId'],
-            // 'totalAmount' => $transaction['totalAmount'],
-            // 'currencySymbol' => $transaction['currencySymbol'] ,
-            // 'authCode' => $transaction['authCode'],
-            // 'card_last4' => $this->alert->card_last4,
-            // 'card_bin' => $this->alert->card_bin,
-            // 'arn' => $this->alert->arn,
-            // 'chargeback_reason_code' => $this->alert->chargeback_reason_code,
-            // 'chargeback_amount' => $this->alert->chargeback_amount,
-            // 'chargeback_currency' => $this->alert->chargeback_currency,
-            // ]
         );
 
         $this->addNoteToCustomer();
