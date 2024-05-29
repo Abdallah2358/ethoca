@@ -1,5 +1,31 @@
-# Description
-This is laravel project for sending soap api request to ethoca web service and log the response in database.
+- [Project Description](#project-description)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Ethoca Pull Config](#ethoca-pull-config)
+  - [Usage](#usage)
+    - [Single Pull](#single-pull)
+    - [Scheduled pull](#scheduled-pull)
+- [Ethoca Push Config](#ethoca-push-config)
+- [Ethoca Push Webhook](#ethoca-push-webhook)
+  - [Summary](#summary)
+  - [Configuration](#configuration)
+  - [Processing Alert](#processing-alert)
+  - [Testing](#testing)
+    - [Push Alerts](#push-alerts)
+      - [Tools](#tools)
+      - [Steps](#steps)
+        - [Runing the Server](#runing-the-server)
+        - [Postman](#postman)
+        - [Mockoon](#mockoon)
+        - [SoapUI](#soapui)
+      - [Important Notes](#important-notes)
+
+# Project Description
+This is laravel project is a bot for 
+1. handling ethoca alerts by either receiving the alerts from ethoca or pulling them then performing certain action on Koniktive using there api and make sure to save all the steps done by the bot starting from receiving the alerts to performing the actions to updating the alert status
+
+2. provide some helpful visualization of all the steps done by the bot this includes successful and failed steps to get help evaluate the performance of the bot  
+
 
 # Requirements
 1. PHP + 8.0
@@ -10,7 +36,7 @@ This is laravel project for sending soap api request to ethoca web service and l
 1. Clone the repository
 2. Run `composer install`
 3. create a `.env` file from a copy of [.env.example](.env.example)
-4. fill the required fields 
+4. fill the required fields including these custom one 
    - ETHOCA_WSDL_URL 
         > The url/path to  `EthocaAlerts.wsdl` either sandbox or production 
    - ETHOCA_USERNAME 
@@ -24,16 +50,17 @@ This is laravel project for sending soap api request to ethoca web service and l
     - KONNEKTIVE_PASSWORD
         > The password for CRM API
 
-# Usage 
+# Ethoca Pull Config 
+## Usage 
 
 The app uses Task Scheduling in Laravel ( similar to cron jobs) to pull alerts form Ethoca every certain interval 
  
-## Single Pull
+### Single Pull
 - run
     ```bash
         php artisan app:make-soap-alerts-request
     ```
-## Scheduled pull
+### Scheduled pull
 - run 
     ```bash
         php artisan schedule:work
@@ -48,16 +75,16 @@ The app uses Task Scheduling in Laravel ( similar to cron jobs) to pull alerts f
 # Ethoca Push Webhook
 ## Summary
 - The Ethoca Push is handled by a Webhook using `Spatie\WebhookClient` package
-## Configuration
 
+## Configuration
 The Webhook is configured in [config/webhook-client.php](config/webhook-client.php) under configs array key `Ethoca-Alert-Notification` each key has a comment that explains the configuration but our main concern is `process_webhook_job` key which is the job that will be dispatched when the webhook is hit.
 
 ## Processing Alert
-- Once The webhook `Ethoca-Alert-Notification` is hit the job `App\Jobs\ANProcessWebhookJob` will be dispatched which does the following;
+- Once The webhook `Ethoca-Alert-Notification` is hit the job [ANProcessWebhookJob](app\Jobs\ANProcessWebhookJob.php) (`AN` short for `alert notification`) will be dispatched which does the following;
     - Log the request in the database
     - Check if the alert is already received and saved in the database
     - saves the alert in the database
-    - Then Dispatches a job `App\Jobs\ProcessAlert` which does the following;
+    - Then Dispatches a job [ProcessAlert](app\Jobs\ProcessAlert.php) which does the following;
         - Check if the alert is valid by searching for a related Transaction
         - if found add 2 notes to customer one for the alert and one `OTP`
         - get the customer details from CRM API
@@ -67,7 +94,7 @@ The Webhook is configured in [config/webhook-client.php](config/webhook-client.p
         - refund amount of the transaction
         - check the customer actions history to confirm all the actions are done
         - update the alert handled status in the database
-        - dispatch a job `App\Jobs\ProcessUpdateEthoca` which does the following :
+        - dispatch a job [ProcessUpdateEthoca](app\Jobs\ProcessUpdateEthoca.php) which does the following :
           - creates an ethoca update in database to log that an update was triggered
           - send the update to ethoca
           - log the response from ethoca
@@ -77,11 +104,16 @@ The Webhook is configured in [config/webhook-client.php](config/webhook-client.p
 ## Testing
 ### Push Alerts 
 #### Tools 
-- Postman
-- Mockoon
-- SoapUI
+- [Postman](https://www.postman.com/downloads/) 
+- [Mockoon](https://mockoon.com/download/)
+- [SoapUI Open Source]()
 
 #### Steps
+##### Runing the Server
+Start by running the server using 
+```Bash
+    php artisan serve
+```
 ##### Postman
 Post Man is here used to mock the ethoca push alerts
 - Create a new post request to `http://localhost:8000/EthocaAlertNotification`
@@ -149,3 +181,8 @@ SoapUI is used to mock the ethoca Update alerts response since it can only done 
         </soapenv:Body>
         </soapenv:Envelope>
     ```
+#### Important Notes
+All The Pay load must have: 
+- Same EthocaId
+- Same Card Bin
+- Same Card Last4
