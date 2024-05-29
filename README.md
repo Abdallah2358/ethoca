@@ -35,10 +35,13 @@ This is laravel project is a bot for
 # Installation
 1. Clone the repository
 2. Run `composer install`
+   - Make Sure you have Soap extension enabled on php.init file on **Windows** or install it on **MAc** and **Linux**  using 
+     - linux `sudo apt-get install php-soap`
+     - mac `brew install php-soap`
 3. create a `.env` file from a copy of [.env.example](.env.example)
 4. fill the required fields including these custom one 
    - ETHOCA_WSDL_URL 
-        > The url/path to  `EthocaAlerts.wsdl` either sandbox or production 
+        > The url/path to `EthocaAlerts.wsdl` either sandbox or production 
    - ETHOCA_USERNAME 
         > The User Name given by ethoca for api auth
    - ETHOCA_PASSWORD
@@ -109,8 +112,10 @@ The Webhook is configured in [config/webhook-client.php](config/webhook-client.p
 - [SoapUI Open Source]()
 
 #### Steps
+
 ##### Runing the Server
 Start by running the server using 
+
 ```Bash
     php artisan serve
 ```
