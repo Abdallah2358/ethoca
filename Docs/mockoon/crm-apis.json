@@ -1,0 +1,315 @@
+{
+  "uuid": "958e1774-6c6f-4528-bb90-04e337811157",
+  "lastMigration": 32,
+  "name": "CRM API",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3000,
+  "hostname": "",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "c85ed1ef-17f5-4e48-ac9c-168ce7e3d741",
+      "type": "http",
+      "documentation": "Find Transaction Route",
+      "method": "post",
+      "endpoint": "transactions/query",
+      "responses": [
+        {
+          "uuid": "ad51aae1-a9a3-405a-b1b8-c84a94656ea5",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": {\r\n        \"totalResults\": 2,\r\n        \"resultsPerPage\": \"25\",\r\n        \"page\": 1,\r\n        \"data\": [\r\n            {\r\n                \"transactionId\": 13977,\r\n                \"merchant\": \"NMI # 2\",\r\n                \"merchantDescriptor\": null,\r\n                \"midNumber\": null,\r\n                \"merchantId\": 13,\r\n                \"dateCreated\": \"2015-02-13 15:13:21\",\r\n                \"txnType\": \"SALE\",\r\n                \"responseType\": \"SUCCESS\",\r\n                \"responseText\": \"Charge Successful\",\r\n                \"authCode\": \"152589\",\r\n                \"cvvResponse\": \"M\",\r\n                \"avsResponse\": \"Y\",\r\n                \"merchantTxnId\": \"69367\",\r\n                \"totalAmount\": \"12.98\",\r\n                \"orderId\": \"A51DFD793C\",\r\n                \"clientOrderId\": \"A51DFD793C\",\r\n                \"billingCycleNumber\": 1,\r\n                \"recycleNumber\": null,\r\n                \"campaignId\": \"87\",\r\n                \"campaignName\": \"Supplements\",\r\n                \"firstName\": \"Andy\",\r\n                \"lastName\": \"Lopez\",\r\n                \"orderType\": \"NEW_SALE\",\r\n                \"customerId\": 50455,\r\n                \"emailAddress\": \"AndyLopez79534@phoneyemail.com\",\r\n                \"phoneNumber\": \"33327183251\",\r\n                \"paySource\": \"CREDITCARD\",\r\n                \"cardBin\": \"111122\",\r\n                \"cardLast4\": \"4444\",\r\n                \"cardType\": \"TESTCARD\",\r\n                \"achBankName\": null,\r\n                \"achRoutingNumber\": null,\r\n                \"achAccountNumber\": null,\r\n                \"affId\": null,\r\n                \"sourceValue1\": null,\r\n                \"sourceValue2\": null,\r\n                \"sourceValue3\": null,\r\n                \"sourceValue4\": null,\r\n                \"sourceValue5\": null,\r\n                \"isChargedback\": 1,\r\n                \"chargebackAmount\": \"10.00\",\r\n                \"chargebackDate\": \"2015-02-14 00:00:00\",\r\n                \"chargebackReasonCode\": \"1233\",\r\n                \"chargebackNote\": null,\r\n                \"currencySymbol\": \"$\",\r\n                \"items\": [\r\n                    {\r\n                        \"product\": \"Forskolin\",\r\n                        \"purchaseId\": \"55F39977D8\",\r\n                        \"price\": \"6.99\",\r\n                        \"shipping\": \"0.00\",\r\n                        \"salesTax\": \"0.00\",\r\n                        \"quantity\": \"1\"\r\n                    },\r\n                    {\r\n                        \"product\": \"Garcinia\",\r\n                        \"purchaseId\": \"2AF334697C\",\r\n                        \"price\": \"5.99\",\r\n                        \"shipping\": \"0.00\",\r\n                        \"salesTax\": \"0.00\",\r\n                        \"quantity\": \"1\"\r\n                    }\r\n                ]\r\n            },\r\n            {\r\n                \"transactionId\": 13975,\r\n                \"merchant\": \"NMI # 2\",\r\n                \"merchantDescriptor\": null,\r\n                \"midNumber\": null,\r\n                \"merchantId\": 13,\r\n                \"dateCreated\": \"2015-02-13 15:10:52\",\r\n                \"txnType\": \"SALE\",\r\n                \"responseType\": \"SUCCESS\",\r\n                \"responseText\": \"SUCCESS\",\r\n                \"merchantTxnId\": \"2581253611\",\r\n                \"totalAmount\": \"5.00\",\r\n                \"orderId\": \"CA35D6FC12\",\r\n                \"clientOrderId\": \"CA35D6FC12\",\r\n                \"billingCycleNumber\": 1,\r\n                \"recycleNumber\": null,\r\n                \"campaignId\": \"87\",\r\n                \"campaignName\": \"Supplements\",\r\n                \"firstName\": \"Bailey\",\r\n                \"lastName\": \"Sanchez\",\r\n                \"orderType\": \"NEW_SALE\",\r\n                \"customerId\": 50683,\r\n                \"emailAddress\": \"BaileySanchez65387@phoneyemail.com\",\r\n                \"phoneNumber\": \"33363298172\",\r\n                \"address1\": \"105 Hemp St\",\r\n                \"address2\": \"Apt. 24\",\r\n                \"city\": \"Roswell\",\r\n                \"state\": \"GA\",\r\n                \"country\": \"US\",\r\n                \"postalCode\": \"30155\",\r\n                \"paySource\": \"CREDITCARD\",\r\n                \"cardBin\": \"111122\",\r\n                \"cardLast4\": \"4444\",\r\n                \"cardType\": \"VISA\",\r\n                \"achBankName\": null,\r\n                \"achRoutingNumber\": null,\r\n                \"achAccountNumber\": null,\r\n                \"affId\": null,\r\n                \"sourceValue1\": null,\r\n                \"sourceValue2\": null,\r\n                \"sourceValue3\": null,\r\n                \"sourceValue4\": null,\r\n                \"sourceValue5\": null,\r\n                \"isChargedback\": 1,\r\n                \"chargebackAmount\": \"1.00\",\r\n                \"chargebackDate\": \"2015-02-14 00:00:00\",\r\n                \"chargebackReasonCode\": \"1233\",\r\n                \"chargebackNote\": \"Customer called in and complained\",\r\n                \"currencySymbol\": \"$\",\r\n                \"items\": [\r\n                    {\r\n                        \"product\": \"Colon Cleanse\",\r\n                        \"purchaseId\": \"C1D72999CF\",\r\n                        \"price\": \"5.00\",\r\n                        \"shipping\": \"0.00\",\r\n                        \"salesTax\": \"0.00\",\r\n                        \"quantity\": \"1\"\r\n                    }\r\n                ]\r\n            }\r\n        ],\r\n        \"params\": null,\r\n        \"errors\": null,\r\n        \"sortBy\": \"dateCreated\",\r\n        \"sortDir\": 0,\r\n        \"queryArgs\": {\r\n            \"page\": 1,\r\n            \"sortDir\": 0,\r\n            \"resultsPerPage\": \"25\",\r\n            \"sortBy\": \"dateCreated\",\r\n            \"startDate\": \"2/1/15\",\r\n            \"endDate\": \"2/18/15\",\r\n            \"responseType\": \"SUCCESS\",\r\n            \"txnType\": \"SALE\",\r\n            \"dateRangeType\": \"dateCreated\",\r\n            \"dateCreated\": [\r\n                {\r\n                    \"date\": \"2015-02-01 00:00:00.000000\",\r\n                    \"timezone_type\": 3,\r\n                    \"timezone\": \"America/New_York\"\r\n                },\r\n                {\r\n                    \"date\": \"2015-02-18 00:00:00.000000\",\r\n                    \"timezone_type\": 3,\r\n                    \"timezone\": \"America/New_York\"\r\n                }\r\n            ]\r\n        }\r\n    }\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "1e3fbce8-ba94-4254-a14c-bb46833abbd4",
+      "type": "http",
+      "documentation": "Get Customer Data",
+      "method": "post",
+      "endpoint": "customer/query/",
+      "responses": [
+        {
+          "uuid": "8f627995-a4a1-4ad0-9c02-963ff983193c",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": {\r\n        \"totalResults\": 3,\r\n        \"resultsPerPage\": null,\r\n        \"page\": 1,\r\n        \"data\": [\r\n            {\r\n                \"customerId\": 2955,\r\n                \"firstName\": \"Darl\",\r\n                \"lastName\": \"Clark\",\r\n                \"companyName\": null,\r\n                \"address1\": \"6170 Main Street\",\r\n                \"city\": \"Dallas\",\r\n                \"state\": \"AL\",\r\n                \"country\": \"US\",\r\n                \"postalCode\": \"45329\",\r\n                \"phoneNumber\": \"33362613640\",\r\n                \"emailAddress\": \"DarlClark99137@phoneyemail.com\",\r\n                \"billShipSame\": 1,\r\n                \"shipFirstName\": \"Darl\",\r\n                \"shipLastName\": \"Clark\",\r\n                \"shipCompanyName\": null,\r\n                \"shipAddress1\": \"6170 Main Street\",\r\n                \"shipAddress2\": null,\r\n                \"shipCity\": \"Dallas\",\r\n                \"shipState\": \"AL\",\r\n                \"shipPostalCode\": \"45329\",\r\n                \"shipCountry\": \"US\",\r\n                \"paySourceId\": 365,\r\n                \"paySource\": \"CREDITCARD\",\r\n                \"cardType\": \"TESTCARD\",\r\n                \"cardLast4\": \"0000\",\r\n                \"cardExpiryDate\": \"2017-03-31 00:00:00\",\r\n                \"sourceValue1\": null,\r\n                \"sourceValue2\": null,\r\n                \"sourceValue3\": null,\r\n                \"dateCreated\": \"2015-09-14 15:29:12\",\r\n                \"dateUpdated\": \"2015-09-14 15:29:12\",\r\n                \"mostRecentActivity\": \"2015-09-14 15:29:12\",\r\n                \"eCommerceLogin\": null,\r\n                \"eCommercePassword\": null,\r\n                \"campaignName\": \"Phone\",\r\n                \"campaignType\": \"PHONE\",\r\n                \"clientSourceId\": null,\r\n                \"sourceTitle\": null,\r\n                \"sourceType\": null,\r\n                \"sourceId\": null,\r\n                \"dateOfBirth\": null,\r\n                \"notes\": null,\r\n                \"customFields\": {\r\n                    \"Ad Source\": \"Google\",\r\n                    \"Pet\": \"Dog\",\r\n                    \"Smoker\": \"0\",\r\n                    \"Epilepsy\": \"0\",\r\n                    \"Quadriplegic\": \"1\",\r\n                    \"Heart Disease\": \"0\",\r\n                    \"Dementia\": \"0\",\r\n                    \"Oxygen\": \"1\",\r\n                    \"Diabetes\": \"0\",\r\n                    \"Bariatric\": \"0\",\r\n                    \"Stroke\": \"0\",\r\n                    \"Life Threatening Allergy\": \"0\",\r\n                    \"Medical Instructions\": \"asdf dasfasd asdf adsafa f aafas\",\r\n                    \"Monitoring Language\": \"English\",\r\n                    \"Security Passcode\": \"12333de\",\r\n                    \"Lockbox Pass Code\": null,\r\n                    \"Lockbox Location\": \"3333de\",\r\n                    \"Contact 1 Name\": \"aasdfasdf\",\r\n                    \"Contact 1 Phone\": \"1233363s\",\r\n                    \"Contact 2 Name\": \"fff333hhhs\",\r\n                    \"Contact 2 Phone\": null,\r\n                    \"Special Instructions\": \"asdfdsf afdasf dsfa \",\r\n                    \"Model\": \"1233\",\r\n                    \"Serial Number\": \"222222222\",\r\n                    \"Telguard Number\": null,\r\n                    \"Alarm Account Number\": \"1\"\r\n                }\r\n            }\r\n        ],\r\n        \"params\": null,\r\n        \"errors\": null,\r\n        \"sortBy\": \"dateCreated\",\r\n        \"sortDir\": 0,\r\n        \"queryArgs\": {\r\n            \"page\": 1,\r\n            \"sortDir\": 0,\r\n            \"resultsPerPage\": null,\r\n            \"sortBy\": \"dateCreated\",\r\n            \"customerId\": \"2955\",\r\n            \"dateRangeType\": \"dateCreated\"\r\n        }\r\n    }\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "55d3af20-8a75-4984-8c5f-622856ea7de9",
+      "type": "http",
+      "documentation": "Blacklist Customer Email, Phone, and Cancel all his subs",
+      "method": "post",
+      "endpoint": "customer/blacklist/",
+      "responses": [
+        {
+          "uuid": "123b51c7-006a-4da9-9be5-f5b0c26df9dd",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": \"Blacklist updated\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Blacklist Customer Email",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": ".blacklistType",
+              "value": "emailAddress",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "ab9783e9-c684-46c0-9449-810bb00f3553",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": \"Blacklist updated\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Blacklist Customer Phone",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": "",
+              "value": "",
+              "invert": false,
+              "operator": "equals"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        },
+        {
+          "uuid": "0d2a0707-1dcf-4585-aba4-9895b584e304",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": \"Blacklist updated\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Cancel Customer Subscriptions",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [
+            {
+              "target": "body",
+              "modifier": ".customerId",
+              "value": "",
+              "invert": true,
+              "operator": "null"
+            }
+          ],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "992aec65-5432-4b85-8554-8d77e88ada38",
+      "type": "http",
+      "documentation": "Cancel Fulfillments",
+      "method": "post",
+      "endpoint": "fulfillment/update/",
+      "responses": [
+        {
+          "uuid": "f783776f-29be-4158-93ce-637ba421a95a",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": \"Order marked as Cancelled\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Cancel Fulfillments",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "7f231cdf-d812-47b2-8e92-7bdff91c5a42",
+      "type": "http",
+      "documentation": "Refund Transactions",
+      "method": "post",
+      "endpoint": "transactions/refund/",
+      "responses": [
+        {
+          "uuid": "cba3b6ad-f01a-43a3-946e-3c937dcbc120",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": \"Refund Successful\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    },
+    {
+      "uuid": "285482e7-847d-42b4-8fd4-741471ca1453",
+      "type": "http",
+      "documentation": "Get Customer History",
+      "method": "post",
+      "endpoint": "customer/history/",
+      "responses": [
+        {
+          "uuid": "130c9e33-a383-47b4-80d4-8b44c7d45779",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": {\r\n        \"totalResults\": 19,\r\n        \"resultsPerPage\": \"25\",\r\n        \"page\": 1,\r\n        \"data\": [\r\n            {\r\n                \"message\": \"New customer order 700538B1D6 ($4.99) created\",\r\n                \"dateCreated\": \"2015-06-17 09:25:38\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"testadmin\"\r\n            },\r\n            {\r\n                \"message\": \"Trial started for product Forskolin full trial billing will occur on 07\\/01\\/15\",\r\n                \"dateCreated\": \"2015-06-17 09:25:38\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"System\"\r\n            },\r\n            {\r\n                \"message\": \"fafdsdafasdf\",\r\n                \"dateCreated\": \"2015-06-17 09:28:09\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"testadmin\"\r\n            },\r\n            {\r\n                \"message\": \"Fulfillment Company updated for order: 700538B1D6\",\r\n                \"dateCreated\": \"2015-06-17 10:16:46\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"jeffm\"\r\n            },\r\n            {\r\n                \"message\": \"New customer order B7E8B018A6 ($75.9) created\",\r\n                \"dateCreated\": \"2015-06-18 09:38:54\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"sarath.g\"\r\n            },\r\n            {\r\n                \"message\": \"Trial started for product Shampoo2 full trial billing will occur on 07\\/02\\/15\",\r\n                \"dateCreated\": \"2015-06-18 09:38:54\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"System\"\r\n            },\r\n            {\r\n                \"message\": \"Fulfillment for order B7E8B018A6 cancelled\",\r\n                \"dateCreated\": \"2015-06-18 09:44:34\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"jeffm\"\r\n            },\r\n            {\r\n                \"message\": \"Fulfillment for order B7E8B018A6 scheduled to be reshipped\",\r\n                \"dateCreated\": \"2015-06-18 09:44:38\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"jeffm\"\r\n            },\r\n            {\r\n                \"message\": \"New order could not be created due to declined transactions.\",\r\n                \"dateCreated\": \"2015-06-18 12:52:34\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"sarath.g\"\r\n            },\r\n            {\r\n                \"message\": \"New order could not be created due to declined transactions.\",\r\n                \"dateCreated\": \"2015-06-18 13:16:43\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"sarath.g\"\r\n            },\r\n            {\r\n                \"message\": \"New order could not be created due to declined transactions.\",\r\n                \"dateCreated\": \"2015-06-18 13:30:34\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"sarath.g\"\r\n            },\r\n            {\r\n                \"message\": \"New order could not be created due to declined transactions.\",\r\n                \"dateCreated\": \"2015-06-18 13:30:40\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"sarath.g\"\r\n            },\r\n            {\r\n                \"message\": \"New customer order 08D92A0530 ($16.24) created\",\r\n                \"dateCreated\": \"2015-06-18 13:35:47\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"bbeal\"\r\n            },\r\n            {\r\n                \"message\": \"Trial started for product Colon Cleanse full trial billing will occur on 07\\/02\\/15\",\r\n                \"dateCreated\": \"2015-06-18 13:35:47\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"System\"\r\n            },\r\n            {\r\n                \"message\": \"Order Confirmation Email titled \\\"Thank you for your Order!\\\" sent to testman@konnektive.com\",\r\n                \"dateCreated\": \"2015-06-18 13:35:47\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"System\"\r\n            },\r\n            {\r\n                \"message\": \"Order #08D92A0530 refunded for $16.24.\",\r\n                \"dateCreated\": \"2015-06-18 13:50:49\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"bbeal\"\r\n            },\r\n            {\r\n                \"message\": \"Continuity purchase: Shampoo cancelled (Reason: Was Not Aware of Trial Terms) \",\r\n                \"dateCreated\": \"2015-06-18 17:19:15\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"bbeal\"\r\n            },\r\n            {\r\n                \"message\": \"Order #B7E8B018A6 cancelled. Order refunded for $75.90.\",\r\n                \"dateCreated\": \"2015-06-18 17:19:15\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"bbeal\"\r\n            },\r\n            {\r\n                \"message\": \"Card out of date\",\r\n                \"dateCreated\": \"2015-06-18 17:19:15\",\r\n                \"categoryType\": \"PARTIAL\",\r\n                \"isAgentNote\": 0,\r\n                \"agentName\": \"bbeal\"\r\n            }\r\n        ],\r\n        \"params\": null,\r\n        \"errors\": null,\r\n        \"sortBy\": null,\r\n        \"sortDir\": 1,\r\n        \"queryArgs\": {\r\n            \"page\": 1,\r\n            \"sortDir\": 1,\r\n            \"resultsPerPage\": \"25\",\r\n            \"sortBy\": null,\r\n            \"customerId\": \"2607\"\r\n        }\r\n    }\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
+    }
+  ],
+  "rootChildren": [
+    {
+      "type": "route",
+      "uuid": "c85ed1ef-17f5-4e48-ac9c-168ce7e3d741"
+    },
+    {
+      "type": "route",
+      "uuid": "1e3fbce8-ba94-4254-a14c-bb46833abbd4"
+    },
+    {
+      "type": "route",
+      "uuid": "55d3af20-8a75-4984-8c5f-622856ea7de9"
+    },
+    {
+      "type": "route",
+      "uuid": "992aec65-5432-4b85-8554-8d77e88ada38"
+    },
+    {
+      "type": "route",
+      "uuid": "7f231cdf-d812-47b2-8e92-7bdff91c5a42"
+    },
+    {
+      "type": "route",
+      "uuid": "285482e7-847d-42b4-8fd4-741471ca1453"
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "data": [
+    {
+      "uuid": "adf3217b-d54b-4eed-b318-171d2dc14893",
+      "id": "xgcj",
+      "name": "Users",
+      "documentation": "",
+      "value": "[\n  {{#repeat 50}}\n  {\n    \"id\": \"{{faker 'string.uuid'}}\",\n    \"username\": \"{{faker 'internet.userName'}}\"\n  }\n  {{/repeat}}\n]"
+    }
+  ],
+  "callbacks": []
+}
