@@ -52,7 +52,10 @@ This is laravel project is a bot for
         > The login id for CRM API
     - KONNEKTIVE_PASSWORD
         > The password for CRM API
-
+5. run the database migration and seeder
+   ```bash
+        php artisan migrate --seed
+   ```
 # Ethoca Pull Config 
 ## Usage 
 

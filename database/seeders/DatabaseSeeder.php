@@ -6,7 +6,6 @@ namespace Database\Seeders;
 
 use App\Models\Company;
 use App\Models\CrmAction;
-use App\Models\CrmTransaction;
 use App\Models\EthocaAcknowledgement;
 use App\Models\EthocaAlert;
 use App\Models\EthocaError;
@@ -14,8 +13,6 @@ use App\Models\EthocaRequest;
 use App\Models\EthocaResponse;
 use App\Models\EthocaUpdate;
 use App\Models\Merchant;
-use Database\Factories\AcknowledgementFactory;
-use Database\Factories\AlertsFactory;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -55,7 +52,7 @@ class DatabaseSeeder extends Seeder
         $merchants = $companies->flatMap(function ($company) {
             return $company->merchants;
         });
-        // return;
+        return;
         foreach ($merchants as $merchant) {
             for ($i = 0; $i < fake()->randomNumber(1, 8); $i++) {
                 EthocaAlert::factory(1, [
