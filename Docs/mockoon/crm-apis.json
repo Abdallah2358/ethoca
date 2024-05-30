@@ -243,6 +243,35 @@
         }
       ],
       "responseMode": null
+    },
+    {
+      "uuid": "c49fd390-814b-4473-8fc7-71bd9b0d48d4",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "customer/addnote/",
+      "responses": [
+        {
+          "uuid": "9c68d670-d1f4-4cdc-8502-41dff2e70e20",
+          "body": "{\r\n  \"result\": \"SUCCESS\",\r\n  \"message\": \"\"\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
     }
   ],
   "rootChildren": [
@@ -269,6 +298,10 @@
     {
       "type": "route",
       "uuid": "285482e7-847d-42b4-8fd4-741471ca1453"
+    },
+    {
+      "type": "route",
+      "uuid": "c49fd390-814b-4473-8fc7-71bd9b0d48d4"
     }
   ],
   "proxyMode": false,
