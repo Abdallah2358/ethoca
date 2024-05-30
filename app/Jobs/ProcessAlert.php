@@ -73,8 +73,7 @@ class ProcessAlert implements ShouldQueue
         $this->addNoteToCustomer('Ethoca Alert Processed');
         $this->alert->is_handled = true;
         $this->alert->save();
-
-        ProcessUpdateEthoca::dispatch($this->alert);
+        $this->appendToChain(new ProcessUpdateEthoca($this->alert));
     }
     # TODO: Refactor these methods to be more generic and reduce code duplication
 
@@ -364,7 +363,7 @@ class ProcessAlert implements ShouldQueue
             'name' => CrmActionEnum::getActionName(CrmActionEnum::AddNoteToCustomer),
             'code' => CrmActionEnum::AddNoteToCustomer,
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/note/', [
+        $response = Http::post(self::KK_API_URL . 'customer/addnote/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
