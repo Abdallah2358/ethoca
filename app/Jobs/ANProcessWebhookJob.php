@@ -43,7 +43,8 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
                 $alert->webhookCall()->associate($this->webhookCall);
                 $alert->save();
             }
-            ProcessAlert::dispatch($alert);
+            $this->appendToChain(new ProcessAlert($alert));
+            // ProcessAlert::dispatchAfterResponse($alert);
             $this->webhookCall->is_success = true;
             $this->webhookCall->save();
         } catch (\Throwable $th) {
