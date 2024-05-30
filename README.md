@@ -31,6 +31,7 @@ This is laravel project is a bot for
 1. PHP + 8.0
 2. Composer
 3. MySQL
+4. Node
 
 # Installation
 1. Clone the repository
@@ -38,8 +39,9 @@ This is laravel project is a bot for
    - Make Sure you have Soap extension enabled on php.init file on **Windows** or install it on **MAc** and **Linux**  using 
      - linux `sudo apt-get install php-soap`
      - mac `brew install php-soap`
-3. create a `.env` file from a copy of [.env.example](.env.example)
-4. fill the required fields including these custom one 
+3. Run `npm install` 
+4. create a `.env` file from a copy of [.env.example](.env.example)
+5. fill the required fields including these custom one 
    - ETHOCA_WSDL_URL 
         > The url/path to `EthocaAlerts.wsdl` either sandbox or production 
    - ETHOCA_USERNAME 
@@ -52,10 +54,11 @@ This is laravel project is a bot for
         > The login id for CRM API
     - KONNEKTIVE_PASSWORD
         > The password for CRM API
-5. run the database migration and seeder
+6. run the database migration and seeder
    ```bash
         php artisan migrate --seed
    ```
+7. Run `npm run dev`
 # Ethoca Pull Config 
 ## Usage 
 
