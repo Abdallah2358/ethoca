@@ -272,12 +272,45 @@
         }
       ],
       "responseMode": null
+    },
+    {
+      "uuid": "e884d729-07aa-4315-8902-ec337957a961",
+      "type": "http",
+      "documentation": "",
+      "method": "post",
+      "endpoint": "merchant/query/",
+      "responses": [
+        {
+          "uuid": "95dd8c09-92dc-46b0-a64e-9edce93e2ad0",
+          "body": "{\r\n    \"result\": \"SUCCESS\",\r\n    \"message\": {\r\n        \"billerId\": 105,\r\n        \"title\": \"Test gateway 01\",\r\n        \"enabled\": 1,\r\n        \"acceptACH\": 0,\r\n        \"directDebit\": 0,\r\n        \"blockPrepaid\": 0,\r\n        \"blockDebit\": 0,\r\n        \"mastercard\": 1,\r\n        \"visa\": 1,\r\n        \"amex\": 1,\r\n        \"discover\": 1,\r\n        \"monthlyLimit\": \"0.00\",\r\n        \"monthlyLimitHasRefunds\": 0,\r\n        \"chargebackRatio\": \"0.000\",\r\n        \"descriptor\": \"Descriptor\",\r\n        \"midNumber\": \"123\",\r\n        \"processorName\": null,\r\n        \"txnFee\": \"0.00\",\r\n        \"discountRate\": \"0.00\",\r\n        \"reserveAccountRate\": \"0.00\",\r\n        \"preAuthAmount\": \"1.00\",\r\n        \"cs_phone\": null,\r\n        \"cs_email\": null,\r\n        \"cs_chargeback\": null,\r\n        \"cs_url\": null,\r\n        \"gatewayId\": 223,\r\n        \"gatewayData\": \"{\\\"CompanyID\\\":\\\"CompanyID\\\",\\\"Password\\\":\\\"Password\\\",\\\"Hashcode\\\":\\\"Hashcode\\\"}\",\r\n        \"visible\": 1,\r\n        \"categoryCode\": null,\r\n        \"bankName\": null,\r\n        \"merchantCategoryId\": 1,\r\n        \"pinlessDebit\": 0,\r\n        \"subaccountId\": null,\r\n        \"consentEnrolledDate\": null,\r\n        \"merchantCategoryName\": \"PrimaCategory\",\r\n        \"uniqueFields\": \"CompanyID:STR40\\nPassword:STR40\\nHashcode:STR40\",\r\n        \"gatewayName\": \"Acquired3DS\"\r\n    }\r\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true,
+          "crudKey": "id",
+          "callbacks": []
+        }
+      ],
+      "responseMode": null
     }
   ],
   "rootChildren": [
     {
       "type": "route",
       "uuid": "c85ed1ef-17f5-4e48-ac9c-168ce7e3d741"
+    },
+    {
+      "type": "route",
+      "uuid": "7f231cdf-d812-47b2-8e92-7bdff91c5a42"
     },
     {
       "type": "route",
@@ -289,19 +322,19 @@
     },
     {
       "type": "route",
-      "uuid": "992aec65-5432-4b85-8554-8d77e88ada38"
-    },
-    {
-      "type": "route",
-      "uuid": "7f231cdf-d812-47b2-8e92-7bdff91c5a42"
-    },
-    {
-      "type": "route",
       "uuid": "285482e7-847d-42b4-8fd4-741471ca1453"
     },
     {
       "type": "route",
       "uuid": "c49fd390-814b-4473-8fc7-71bd9b0d48d4"
+    },
+    {
+      "type": "route",
+      "uuid": "992aec65-5432-4b85-8554-8d77e88ada38"
+    },
+    {
+      "type": "route",
+      "uuid": "e884d729-07aa-4315-8902-ec337957a961"
     }
   ],
   "proxyMode": false,
