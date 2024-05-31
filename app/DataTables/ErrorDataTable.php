@@ -2,7 +2,7 @@
 
 namespace App\DataTables;
 
-use App\Models\EthocaError;
+use App\Models\Error;
 use Illuminate\Database\Eloquent\Builder as QueryBuilder;
 use Yajra\DataTables\EloquentDataTable;
 use Yajra\DataTables\Html\Builder as HtmlBuilder;
@@ -12,7 +12,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 
-class EthocaErrorDataTable extends DataTable
+class ErrorDataTable extends DataTable
 {
     /**
      * Build the DataTable class.
@@ -22,14 +22,14 @@ class EthocaErrorDataTable extends DataTable
     public function dataTable(QueryBuilder $query): EloquentDataTable
     {
         return (new EloquentDataTable($query))
-            ->addColumn('action', 'ethocaerror.action')
+            ->addColumn('action', 'error.action')
             ->setRowId('id');
     }
 
     /**
      * Get the query source of dataTable.
      */
-    public function query(EthocaError $model): QueryBuilder
+    public function query(Error $model): QueryBuilder
     {
         return $model->newQuery();
     }
@@ -40,7 +40,7 @@ class EthocaErrorDataTable extends DataTable
     public function html(): HtmlBuilder
     {
         return $this->builder()
-                    ->setTableId('ethocaerror-table')
+                    ->setTableId('error-table')
                     ->columns($this->getColumns())
                     ->minifiedAjax()
                     //->dom('Bfrtip')
@@ -79,6 +79,6 @@ class EthocaErrorDataTable extends DataTable
      */
     protected function filename(): string
     {
-        return 'EthocaError_' . date('YmdHis');
+        return 'Error_' . date('YmdHis');
     }
 }

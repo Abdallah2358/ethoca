@@ -2,7 +2,7 @@
 
 namespace App\Models\Traits;
 
-use App\Models\EthocaError;
+use App\Models\Error;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 trait HasError
@@ -11,7 +11,7 @@ trait HasError
     {
         return Attribute::make(
             get: function () {
-                return EthocaError::where(
+                return Error::where(
                     [
                         'model' => self::class,
                         'model_id' => $this->id

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 // use App\Models\Enums\EthocaFunctions;
-use App\Models\EthocaError;
+use App\Models\Error;
 use App\Models\EthocaRequest;
 use App\Models\EthocaUpdate;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -37,7 +37,7 @@ class EthocaController extends BaseController
                 $update->status = 1;
                 $update->save();
             } else {
-                $errors = EthocaError::generateErrorsFromResponse($update_response, $update);
+                $errors = Error::generateErrorsFromResponse($update_response, $update);
             }
         }
     }

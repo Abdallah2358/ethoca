@@ -8,7 +8,7 @@ use App\Models\Company;
 use App\Models\CrmAction;
 use App\Models\EthocaAcknowledgement;
 use App\Models\EthocaAlert;
-use App\Models\EthocaError;
+use App\Models\Error;
 use App\Models\EthocaRequest;
 use App\Models\EthocaResponse;
 use App\Models\EthocaUpdate;
@@ -83,7 +83,7 @@ class DatabaseSeeder extends Seeder
         // recived alerts with errors
         for ($i = 0; $i < 10; $i++) {
             # code...
-            EthocaError::factory([
+            Error::factory([
                 'model' => EthocaResponse::class,
             ])->for(
                     EthocaResponse::factory([
@@ -116,7 +116,7 @@ class DatabaseSeeder extends Seeder
             foreach ($alerts as $alert) {
                 $status = fake()->randomElement(['success', 'retry', 'fail']);
                 if ($status != 'success') {
-                    EthocaError::factory([
+                    Error::factory([
                         'model' => EthocaAcknowledgement::class,
                     ])->for(EthocaAcknowledgement::factory([
                             'ethoca_alert_id' => $alert->id,
@@ -146,7 +146,7 @@ class DatabaseSeeder extends Seeder
                 $max_error_count = 3;
 
                 while (!$status && $max_error_count) {
-                    EthocaError::factory(['model' => CrmAction::class])
+                    Error::factory(['model' => CrmAction::class])
                         ->for(
                             CrmAction::factory([
                                 'name' => $action,
@@ -190,7 +190,7 @@ class DatabaseSeeder extends Seeder
                     $outcomes_array = $alert->type == 'issuer_alert' ? $this->confirmed_fraud_outcomes : $this->customer_dispute_outcomes;
                     $outcome = fake()->randomElement($outcomes_array);
                     if (!$status_bool) {
-                        EthocaError::factory([
+                        Error::factory([
                             'model' => EthocaUpdate::class,
                         ])->for(EthocaUpdate::factory([
                                 'ethoca_alert_id' => $alert->id,
@@ -212,7 +212,7 @@ class DatabaseSeeder extends Seeder
                     }
                 }
             } else {
-                EthocaError::factory([
+                Error::factory([
                     'model' => EthocaResponse::class,
                 ])->for($update_res)->create();
             }

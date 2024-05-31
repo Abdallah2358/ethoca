@@ -6,7 +6,7 @@ use App\Models\EthocaAcknowledgement;
 use App\Models\EthocaAlert;
 use App\Models\EthocaAlertError;
 use App\Models\EthocaAlertResponse;
-use App\Models\EthocaError;
+use App\Models\Error;
 use App\Models\EthocaRequest;
 use App\Models\EthocaResponse;
 use Illuminate\Console\Command;
@@ -105,7 +105,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
                                     }
                                     if (isset($ack_response->Errors) && is_array($ack_response->Errors->Error)) {
                                         foreach ($ack_response->Errors->Error as $error) {
-                                            EthocaError::create([
+                                            Error::create([
                                                 'model' => EthocaAcknowledgement::class,
                                                 'model_id' => $ack->id,
                                                 'code' => $error->code,
@@ -113,7 +113,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
                                             ]);
                                         }
                                     } else if (isset($ack_response->Errors)) {
-                                        EthocaError::create([
+                                        Error::create([
                                             'model' => EthocaAcknowledgement::class,
                                             'model_id' => $ack->id,
                                             'code' => $ack_response->Errors->code,
@@ -168,7 +168,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             ]);
             if (isset($response->Errors) && is_array($response->Errors->Error)) {
                 foreach ($response->Errors->Error as $error) {
-                    EthocaError::create([
+                    Error::create([
                         'model' => EthocaResponse::class,
                         'model_id' => $alert_res_model->id,
                         'code' => $error->code,
@@ -176,7 +176,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
                     ]);
                 }
             } else {
-                EthocaError::create([
+                Error::create([
                     'model' => EthocaResponse::class,
                     'model_id' => $alert_res_model->id,
                     'code' => $response->Errors->Error->code,
@@ -185,7 +185,7 @@ class MakeSoapAlertsRequest extends Command implements PromptsForMissingInput
             }
             $response->model = $alert_res_model;
         } catch (\Throwable $th) {
-            EthocaError::create([
+            Error::create([
                 'model' => EthocaRequest::class,
                 'model_id' => $ethoca_request->id,
                 'code' => 500,

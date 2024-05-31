@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class EthocaError extends Model
+class Error extends Model
 {
     use HasFactory;
     protected $guarded = [];
@@ -57,7 +57,7 @@ class EthocaError extends Model
         if (isset($response->Errors) && is_array($response->Errors->Error)) {
             foreach ($response->Errors->Error as $error) {
 
-                $error_record = EthocaError::create([
+                $error_record = Error::create([
                     'model' => get_class($model),
                     'model_id' => $model->id,
                     'code' => $error->code,
@@ -66,7 +66,7 @@ class EthocaError extends Model
                 array_push($errors, $error_record);
             }
         } else {
-            $error_record = EthocaError::create([
+            $error_record = Error::create([
                 'model' => get_class($model),
                 'model_id' => $model->id,
                 'code' => $response->Errors->Error->code,

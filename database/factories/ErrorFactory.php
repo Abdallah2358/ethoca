@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\EthocaError;
+use App\Models\Error;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class ErrorFactory extends Factory
 {
-    protected $model = EthocaError::class;
+    protected $model = Error::class;
     /**
      * Define the model's default state.
      *

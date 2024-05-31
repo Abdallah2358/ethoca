@@ -33,7 +33,7 @@ class EthocaRequest extends Model
             return $ack->errors;
         })->collapse());
         $errors = $errors->concat(
-            EthocaError::where(
+            Error::where(
                 [
                     'model' => self::class,
                     'model_id' => $this->id
@@ -105,7 +105,7 @@ class EthocaRequest extends Model
         if (isset($response->Errors)) {
             if (is_array($response->Errors->Error)) {
                 foreach ($response->Errors->Error as $error) {
-                    EthocaError::create([
+                    Error::create([
                         'model' => EthocaResponse::class,
                         'model_id' => $alert_res_model->id,
                         'code' => $error->code,
@@ -113,7 +113,7 @@ class EthocaRequest extends Model
                     ]);
                 }
             } else {
-                EthocaError::create([
+                Error::create([
                     'model' => EthocaResponse::class,
                     'model_id' => $alert_res_model->id,
                     'code' => $response->Errors->Error->code,
@@ -123,7 +123,7 @@ class EthocaRequest extends Model
         }
         $response->model = $alert_res_model;
         } catch (\Throwable $th) {
-            EthocaError::create([
+            Error::create([
                 'model' => EthocaRequest::class,
                 'model_id' => $ethoca_request->id,
                 'code' => 500,
@@ -171,7 +171,7 @@ class EthocaRequest extends Model
     //     // save all errors to database
     //     if (isset($response->Errors) && isset($response->Errors->Error)) {
     //         foreach ($response->Errors->Error as $error) {
-    //             EthocaError::create([
+    //             Error::create([
     //                 'model' => EthocaRequest::class,
     //                 'model_id' => $ethoca_request->id,
     //                 'code' => $error->code,

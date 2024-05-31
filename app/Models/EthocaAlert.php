@@ -152,7 +152,7 @@ class EthocaAlert extends Model
             return $ack->errors;
         })->collapse());
         $errors = $errors->concat(
-            EthocaError::where(
+            Error::where(
                 [
                     'model' => self::class,
                     'model_id' => $this->id
