@@ -5,14 +5,15 @@ class CrmActionEnum
 {
     const AddNoteToCustomer = 0;
     const FindTransaction = 1;
-    const GetCustomerData = 2;
-    const BlacklistCustomerEmail = 3;
-    const BlacklistCustomerPhone = 4;
-    const BlacklistCustomer = 5;
-    const CancelFulfillments = 6;
-    const RefundTransactions = 7;
-    const GetCustomerHistory = 8;
-    const ConfirmFulfillmentCancel  = 9;
+    const FindGateway = 2;
+    const GetCustomerData = 3;
+    const BlacklistCustomerEmail = 4;
+    const BlacklistCustomerPhone = 5;
+    const BlacklistCustomer = 6;
+    const CancelFulfillments = 7;
+    const RefundTransactions = 8;
+    const GetCustomerHistory = 9;
+    const ConfirmFulfillmentCancel = 10;
     public static function getActionName($action)
     {
         switch ($action) {
@@ -20,6 +21,8 @@ class CrmActionEnum
                 return 'Add Note To Customer';
             case self::FindTransaction:
                 return 'Find Transaction';
+            case self::FindGateway:
+                return 'Find Gateway';
             case self::GetCustomerData:
                 return 'Get Customer Data';
             case self::BlacklistCustomerEmail:
