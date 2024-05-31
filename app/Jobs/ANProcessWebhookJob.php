@@ -53,7 +53,7 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
             $this->webhookCall->save();
             Error::create([
                 'ethoca_id' => $ethoca_id,
-                'Notes' => $th->getMessage(),
+                'exception' => $th,
             ]);
             throw $th;
         }
