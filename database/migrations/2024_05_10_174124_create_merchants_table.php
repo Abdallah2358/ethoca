@@ -14,8 +14,11 @@ return new class extends Migration {
         Schema::create('merchants', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Company::class)->constrained();
-            $table->string('descriptor');
-            $table->string('mcc');
+            $table->string('biller_id')->index()->comment('The merchant ID of the company Crossponds to crm_id in companies');
+            $table->string('title')->nullable();
+            $table->string('descriptor')->nullable();
+            $table->string('midNumber')->nullable();
+            $table->string('gatewayName')->nullable();
             $table->timestamps();
         });
     }
