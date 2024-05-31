@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\EthocaAlert;
-use App\Models\EthocaError;
+use App\Models\Error;
 use Spatie\WebhookClient\Jobs\ProcessWebhookJob as SpatieProcessWebhookJob;
 
 
@@ -32,7 +32,8 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
             $alert = EthocaAlert::where('ethoca_id', $ethoca_id);
             if ($alert->exists()) {
                 $alert = $alert->first();
-                EthocaError::create([
+                # TODO: Add a check to see if the alert is already processed
+                Error::create([
                     'ethoca_id' => $ethoca_id,
                     'code' => 'DUP_ALERT',
                     'description' => 'Duplicate Alert',
@@ -42,17 +43,19 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
                 $alert = new EthocaAlert($payload);
                 $alert->webhookCall()->associate($this->webhookCall);
                 $alert->save();
+                # TODO: Add a check to see if the alert is already processed
+                $this->appendToChain(new ProcessAlert($alert));
             }
-            $this->appendToChain(new ProcessAlert($alert));
-            // ProcessAlert::dispatchAfterResponse($alert);
             $this->webhookCall->is_success = true;
             $this->webhookCall->save();
         } catch (\Throwable $th) {
             $this->webhookCall->ethoca_id = $ethoca_id;
             $this->webhookCall->save();
+            Error::create([
+                'ethoca_id' => $ethoca_id,
+                'Notes' => $th->getMessage(),
+            ]);
             throw $th;
         }
-
-        // throw new \Exception("Error Processing Request", 1);
     }
 }
