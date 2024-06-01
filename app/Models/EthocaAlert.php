@@ -51,7 +51,7 @@ class EthocaAlert extends Model
     {
         return $this->hasMany(CrmAction::class);
     }
-    
+
     public function merchant(): BelongsTo
     {
         return $this->belongsTo(Merchant::class);
@@ -59,7 +59,7 @@ class EthocaAlert extends Model
 
     public function crmTransaction(): BelongsTo
     {
-        return $this->belongsTo(CrmTransaction::class);
+        return $this->belongsTo(CrmTransaction::class,'crm_transaction_id','transactionId');
     }
 
     public function ethocaAcknowledgements(): HasMany
