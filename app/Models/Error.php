@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
+use App\Casts\Json;
 use Database\Factories\ErrorFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,7 +15,27 @@ class Error extends Model
 {
     use HasFactory;
     protected $guarded = [];
-
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            // 'exception' => Json::class,
+        ];
+    }
+    /**
+     * Interact with the user's first name.
+     */
+    protected function exception(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => json_decode($value),
+            set: fn($value) => json_encode($value),
+        );
+    }
     protected static function newFactory(): Factory
     {
         return ErrorFactory::new();

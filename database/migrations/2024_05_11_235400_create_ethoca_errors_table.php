@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('description', 255)->nullable()->comment('The error message returned by Ethoca');
             $table->string('notes', 255)->comment('The some notes about the error')
                 ->nullable()->default(null);
+            $table->json('exception')->nullable()->default(null)->comment('The exception happened on the server side');
             $table->boolean('is_ack_error')->comment('The flag to indicate if the error is an acknowledgement error specific for alerts')
                 ->default(0)->index();
             $table->json('data')->nullable()->default(null)->comment('The error data returned by Ethoca');
