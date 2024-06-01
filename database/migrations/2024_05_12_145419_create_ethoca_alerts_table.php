@@ -19,7 +19,9 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(EthocaResponse::class)->nullable()->default(null)->constrained()->comment('Associated Response ID');
             $table->foreignIdFor(WebhookCall::class)->nullable()->default(null)->constrained()->comment('Associated WebHookCall');
-            $table->foreignIdFor(CrmTransaction::class)->nullable()->default(null)->constrained()->comment('CRM Transaction ID');
+            $table->mediumInteger('crm_transaction_id')->nullable()->default(null)->comment('CRM Transaction ID');
+            $table->foreign('crm_transaction_id')->references('transactionId')->on('crm_transactions');
+            // $table->foreignIdFor(CrmTransaction::class,'transactionId')->nullable()->default(null)->constrained()->comment('CRM Transaction ID');
             $table->foreignIdFor(Merchant::class)->nullable()->default(null)->constrained();
             $table->integer('crm_customer_id')->index()->nullable()->default(null)->comment('CRM Customer ID');
             $table->boolean('is_handled')->index()->default(false)->comment('This flag is raised when the CRM is done handling this alert and waiting update');

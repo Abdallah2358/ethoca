@@ -14,7 +14,7 @@ return new class extends Migration {
         Schema::create('crm_transactions', function (Blueprint $table) {
             $table->id();
             $table->string('ethoca_id')->nullable()->default(null)->index()->comment('The Ethoca ID');
-            $table->mediumInteger('transactionId')->nullable()->default(null);
+            $table->mediumInteger('transactionId')->index()->nullable()->default(null);
             $table->string('parentTxnId', 255)->nullable()->default(null);
             $table->string('merchant', 255)->nullable()->default(null);
             $table->string('merchantDescriptor', 255)->nullable()->default(null);
