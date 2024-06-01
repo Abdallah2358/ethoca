@@ -2,11 +2,13 @@
 
 namespace App\Jobs;
 
+use App\Models\Company;
 use App\Models\CrmAction;
 use App\Models\CrmTransaction;
 use App\Models\Enums\CrmActionEnum;
 use App\Models\EthocaAlert;
-use App\Models\EthocaError;
+use App\Models\Error;
+use App\Models\Merchant;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -21,7 +23,6 @@ class ProcessAlert implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected CrmTransaction $transaction;
-    const KK_API_URL = 'https://api.konnektive.com/';
 
     /**
      * Create a new job instance.
@@ -37,22 +38,59 @@ class ProcessAlert implements ShouldQueue
      */
     public function handle(): void
     {
+        # TODO: Add a check to see if the alert is already fully processed
+        # and if so, continue to the next step of processing after trying
+        # the failed step again
         $transaction = $this->findTransaction($this->alert);
+        # TODO : Add a check to see if the transaction is not found because of a failed query to crm and retry.
         if (!$transaction) {
+            # This Assumes that the query to crm is successful but no transaction is found
+            # This is a rare case and should be handled differently
+            ProcessUpdateEthoca::dispatch($this->alert, 'notfound', 'not settled');
             return;
         }
+        $this->alert->crm_customer_id = $transaction['customerId'];
         $this->transaction = CrmTransaction::create(
             $transaction->merge([
                 'ethoca_alert_id' => $this->alert->id,
                 'ethoca_id' => $this->alert->ethoca_id,
             ])->forget('items')->toArray()
         );
+        // dd($this->transaction->merchantId);
+        # TODO: Add a CHECK to see if the company already exists
+        $company = Company::where('crm_id', $this->transaction->merchantId)->firstOrCreate(
+            [
+                'crm_id' => $this->transaction->merchantId,
+                'name' => $this->transaction->merchant,
+                'mcc' => $this->transaction->mcc,
+            ]
+        );
 
+        // dd($company);
+        $gateway = $this->findGateway($this->transaction->merchantId, $this->transaction->midNumber);
+        // dd($gateway['midNumber']);
+        if (!$gateway) {
+            return;
+        }
+        # TODO: Add a CHECK to see if the merchant already exists
+        $merchant = Merchant::where('midNumber', $gateway['midNumber'])->firstOrCreate(
+            [
+                'company_id' => $company->id,
+                'biller_id' => $gateway['billerId'],
+                'title' => $gateway['title'],
+                'descriptor' => $gateway['descriptor'],
+                'midNumber' => $gateway['midNumber'],
+                'gatewayName' => $gateway['gatewayName'],
+            ]
+        );
+        // dd($merchant);
+        $this->alert->crmTransaction()->associate($this->transaction);
+        $this->alert->merchant()->associate($merchant);
+        $this->alert->save();
+        // dd($this->alert);
         $this->addNoteToCustomer();
         $this->addNoteToCustomer("OTP");
         $customer = $this->getCustomerData($this->transaction->crm_customer_id);
-        // dd($customer);
-
         $this->blackListCustomerEmail($customer['emailAddress']);
         $this->addNoteToCustomer('Email Blacklisted');
         $this->blackListCustomerPhone($customer['phoneNumber']);
@@ -77,7 +115,8 @@ class ProcessAlert implements ShouldQueue
     }
     # TODO: Refactor these methods to be more generic and reduce code duplication
 
-    # Todo : Add Functionality to check and make sure that fulfillments are cancelled and all above actions are verified
+    # Todo : Add Functionality to check and make sure that fulfillments are cancelled
+    # and all above actions are verified
     protected function findTransaction(EthocaAlert $alert): Collection|bool
     {
         $action = CrmAction::create([
@@ -85,7 +124,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::FindTransaction,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::FindTransaction),
         ]);
-        $response = Http::post(self::KK_API_URL . 'transactions/query/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'transactions/query/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'txType' => 'SALE',
@@ -108,13 +147,46 @@ class ProcessAlert implements ShouldQueue
             }
             return collect($data[0]);
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $alert->ethoca_id,
             'code' => $response->status(),
             'description' => "Failed to Connect to Konnektive",
             'data' => json_encode($response->json()),
+        ]);
+        return false;
+    }
+
+    protected function findGateway(int $merchantId, int $mid_number): Collection|bool
+    {
+        $action = CrmAction::create([
+            'ethoca_alert_id' => $this->alert->id,
+            'code' => CrmActionEnum::FindGateway,
+            'name' => CrmActionEnum::getActionName(CrmActionEnum::FindGateway),
+        ]);
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'merchant/query/', [
+            'loginId' => env('KONNEKTIVE_LOGIN_ID'),
+            'password' => env('KONNEKTIVE_PASSWORD'),
+            'billerId' => $merchantId,
+        ]);
+        if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
+            $message = $response->json()['message'];
+            $data = collect($message);
+            // dd($data);
+            $gateway = $data;
+            $action->data = $data->toJson();
+            $action->result = 'Found' . 1 . ' gateways';
+            $action->save();
+            return $gateway;
+        }
+        Error::create([
+            'model' => CrmAction::class,
+            'model_id' => $action->id,
+            'ethoca_id' => $this->alert->ethoca_id,
+            'code' => $response->status(),
+            'description' => "Failed to Find Gateway",
+            'data' => $response->json(),
         ]);
         return false;
     }
@@ -125,7 +197,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::GetCustomerData,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerData),
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/query/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'customer/query/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $customer_id,
@@ -138,7 +210,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return $data;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -155,7 +227,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomerEmail,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerEmail),
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/blacklist/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'blacklistType' => 'emailAddress',
@@ -168,7 +240,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return true;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -185,7 +257,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomerPhone,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerPhone),
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/blacklist/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'blacklistType' => 'phoneNumber',
@@ -197,7 +269,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return true;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -218,7 +290,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomer,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomer),
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/blacklist/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'customer/blacklist/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
@@ -229,7 +301,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return true;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -251,7 +323,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::CancelFulfillments,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::CancelFulfillments), // 'Cancel Fulfillments
         ]);
-        $response = Http::post(self::KK_API_URL . 'fulfillment/update/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'fulfillment/update/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'orderId' => $this->transaction->order_id,
@@ -263,7 +335,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return true;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -281,7 +353,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::RefundTransactions,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::RefundTransactions), // 'Refund Transactions',
         ]);
-        $response = Http::post(self::KK_API_URL . 'transactions/refund/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'transactions/refund/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'transactionId' => $this->transaction->transaction_id,
@@ -294,7 +366,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return true;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -311,7 +383,7 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::GetCustomerHistory,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerHistory), // 'Get Customer History',
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/history/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'customer/history/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
@@ -325,7 +397,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return $data;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
@@ -363,7 +435,7 @@ class ProcessAlert implements ShouldQueue
             'name' => CrmActionEnum::getActionName(CrmActionEnum::AddNoteToCustomer),
             'code' => CrmActionEnum::AddNoteToCustomer,
         ]);
-        $response = Http::post(self::KK_API_URL . 'customer/addnote/', [
+        $response = Http::post(env('KONNEKTIVE_API_URL', 'localhost:3000/') . 'customer/addnote/', [
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->crm_customer_id,
@@ -375,7 +447,7 @@ class ProcessAlert implements ShouldQueue
             $action->save();
             return true;
         }
-        EthocaError::create([
+        Error::create([
             'model' => CrmAction::class,
             'model_id' => $action->id,
             'ethoca_id' => $this->alert->ethoca_id,
