@@ -51,6 +51,11 @@ class EthocaAlert extends Model
     {
         return $this->hasMany(CrmAction::class);
     }
+    
+    public function merchant(): BelongsTo
+    {
+        return $this->belongsTo(Merchant::class);
+    }
 
     public function crmTransaction(): BelongsTo
     {
@@ -66,10 +71,7 @@ class EthocaAlert extends Model
     {
         return $this->hasMany(EthocaUpdate::class);
     }
-    public function merchant(): BelongsTo
-    {
-        return $this->belongsTo(Merchant::class);
-    }
+
     /**
      * Create a new factory instance for the model.
      */
