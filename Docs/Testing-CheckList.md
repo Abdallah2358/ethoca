@@ -20,3 +20,4 @@
 - get customer history (tested)
 - confirm Fulfillment  cancel (tested)
 ## ProcessEthocaUpdate
+- update ethoca alert status (tested)

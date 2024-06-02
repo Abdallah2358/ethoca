@@ -6,6 +6,8 @@
   - [Email and Phone Number Blacklist](#email-and-phone-number-blacklist)
 - [Missing Data](#missing-data)
   - [IP Address](#ip-address)
+  - [Paid and Not Paid Alerts](#paid-and-not-paid-alerts)
+- [Reports Views](#reports-views)
 - [Notes](#notes)
 
 # Needed Credentials
@@ -57,7 +59,19 @@ BUT what I am missing is how Am I going to Tie the Transaction to the merchant, 
   - Is this field not available in the API ?
   - Or is it available in another object ?
   - Or is it not important for the bot ?
-
+## Paid and Not Paid Alerts 
+- I see in the video that we want the report to show real-time alerts that are paid and not paid. 
+  - How do I know if the alert is paid or not ?
+# Reports Views 
+- I know we want to show the alerts per LLC and merchant but what data do we want to show in these views ? 
+- In the video I saw that we want to show the alerts 
+  - that are paid and not paid. 
+    - Then per Company
+    - Then per segment of the company or website 
+- Missing : 
+  - using KK API Docs What is a segment of the company ?
+    - Is it the same as gateway ?
+  
 # Notes
   - `Transaction` object from endpoint `transactions/query/`[link](https://apidocs.konnektive.com/#e9a7caf1-825c-485a-b7c4-b3cae30384f3)
   - `Customer` object from endpoint `customer/query/` [link](https://apidocs.konnektive.com/#dd99c63c-2a6d-4fe0-9657-acfe49d90ac9)
