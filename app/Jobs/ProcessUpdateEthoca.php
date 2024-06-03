@@ -34,7 +34,7 @@ class ProcessUpdateEthoca implements ShouldQueue
     {
         $phpFilePath = public_path("EthocaAlerts-Sandbox.wsdl");
         $client = new SoapClient($phpFilePath);
-        $updates = EthocaUpdate::create(
+        $update = EthocaUpdate::create(
             [
                 'ethoca_alert_id' => $this->alert->id,
                 'ethoca_id' => $this->alert->ethoca_id,
@@ -58,7 +58,7 @@ class ProcessUpdateEthoca implements ShouldQueue
                 'AlertUpdates' => $updates,
             ]
         );
-        
+
         $status = null;
         if (isset($response->AlertUpdateResponses)) {
             if (isset($response->AlertUpdateResponses->AlertUpdateResponse)) {
