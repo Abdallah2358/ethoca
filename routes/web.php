@@ -37,13 +37,13 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::webhooks('EthocaAlertNotification', 'Ethoca-Alert-Notification');
 Route::webhooks('CrmAction', 'CRM-Action');
 
-Route::get('alerts/companies/data', [CompanyAlertController::class, 'data'])->name('alerts.companies.data');
-Route::resource('alerts/companies', CompanyAlertController::class)->names(
-    [
-        'index' => 'alerts.companies.index',
-        'show' => 'alerts.companies.show',
-    ]
-);
+// Route::get('alerts/companies/data', [CompanyAlertController::class, 'data'])->name('alerts.companies.data');
+// Route::resource('alerts/companies', CompanyAlertController::class)->names(
+//     [
+//         'index' => 'alerts.companies.index',
+//         'show' => 'alerts.companies.show',
+//     ]
+// );
 
 Route::get('alerts/merchants/{merchant}/data', [EAlertController::class, 'merchantData'])->name('alerts.merchant.data');
 Route::get('alerts/merchants/data', [EAlertController::class, 'merchantsData'])->name('alerts.merchants.data');
