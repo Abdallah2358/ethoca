@@ -44,8 +44,8 @@ class ANProcessWebhookJob extends SpatieProcessWebhookJob
                 $alert->webhookCall()->associate($this->webhookCall);
                 $alert->save();
                 # TODO: Add a check to see if the alert is already processed
-                $this->appendToChain(new ProcessAlert($alert));
             }
+            $this->appendToChain(new ProcessAlert($alert));
             $this->webhookCall->is_success = true;
             $this->webhookCall->save();
         } catch (\Throwable $th) {
