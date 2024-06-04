@@ -35,7 +35,21 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-linkeeeeeeeeeee" aria-current="page" href="/">Home</a>
+                        </li>
 
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                Alerts
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ route('alerts.index') }}">All</a></li>
+                                <li><a class="dropdown-item" href="{{ route('alerts.companies.index') }}">Per Cmapany (LLC)</a></li>
+                                <li><a class="dropdown-item" href="{{ route('alerts.merchants.index') }}">Per Merchant</a></li>
+                            </ul>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
