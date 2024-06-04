@@ -52,6 +52,9 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{route('crm-actions.index')}}">Crm Actions</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" aria-current="page" href="{{route('errors.index')}}">Errors</a>
                         </li>
                     </ul>
