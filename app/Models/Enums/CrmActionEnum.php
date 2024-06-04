@@ -1,7 +1,7 @@
 <?php
 namespace App\Models\Enums;
 
-class CrmActionEnu
+class CrmActionEnum
 {
     const AddNoteToCustomer = 0;
     const FindTransaction = 1;
