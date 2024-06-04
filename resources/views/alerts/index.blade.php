@@ -68,7 +68,10 @@
             // lengthChange: true,
             columns: [
                 {
-                    data: 'id'
+                    data: 'id',
+                    render: function(data, type, row) {
+                        return `<a href="/alerts/${data}"># ${data}</a>`;
+                    }
                 },
                 {
                     data: 'ethoca_response_id'

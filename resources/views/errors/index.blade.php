@@ -16,7 +16,6 @@
                             <th>Description</th>
                             <th>Notes</th>
                             <th>Created At</th>
-                            <th>Updated At</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +40,6 @@
                 {data:'description'},
                 {data:'notes'},
                 {data:'created_at'},
-                {data:'updated_at'},
 
             ],
             columnDefs: [{

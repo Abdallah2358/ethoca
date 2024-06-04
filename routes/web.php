@@ -28,6 +28,7 @@ Route::get('/', function () {
     return view('home');
 });
 Route::resource('requests', ERequestController::class);
+Route::get('crm-actions/data', [CrmActionsController::class, 'data'])->name('crm-actions.data');
 Route::resource('crm-actions', CrmActionsController::class);
 Route::resource('crm-transactions', CrmTransactionController::class);
 // Route::resource('users', UsersController::class);
