@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return response(['message' => 'hello']);
+    return view('home');
 });
 Route::resource('requests', ERequestController::class);
 Route::resource('crm-actions', CrmActionsController::class);
