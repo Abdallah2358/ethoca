@@ -149,7 +149,7 @@
                     data: 'merchant_member_name'
                 },
                 {
-                    data: 'ethoca_transaction_id'
+                    data: 'transaction_id'
                 },
                 {
                     data: 'chargeback_reason_code'

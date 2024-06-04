@@ -6,6 +6,7 @@ use App\Http\Controllers\CrmActionsController;
 use App\Http\Controllers\CrmTransactionController;
 use App\Http\Controllers\EAlertController;
 use App\Http\Controllers\ERequestController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\MerchantAlertController;
 use App\Http\Controllers\MerchantController;
 use App\Http\Controllers\UsersController;
@@ -65,3 +66,7 @@ Route::resource('companies', CompanyController::class);
 
 
 Route::resource('merchants', MerchantController::class);
+
+Route::get('errors', [ErrorController::class, 'index'])->name('errors.index');
+Route::get('errors/data', [ErrorController::class, 'data'])->name('errors.data');
+

@@ -50,6 +50,10 @@
                                 <li><a class="dropdown-item" href="{{ route('alerts.merchants.index') }}">Per Merchant</a></li>
                             </ul>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{route('errors.index')}}">Errors</a>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
