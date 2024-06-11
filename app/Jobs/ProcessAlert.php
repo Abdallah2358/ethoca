@@ -91,10 +91,10 @@ class ProcessAlert implements ShouldQueue
         $this->addNoteToCustomer();
         $this->addNoteToCustomer("OTP");
         $customer = $this->getCustomerData($this->transaction->customerId);
-         $this->blackListCustomerEmail($customer['emailAddress']);
-         $this->addNoteToCustomer('Email Blacklisted');
-         $this->blackListCustomerPhone($customer['phoneNumber']);
-         $this->addNoteToCustomer('Phone Blacklisted');
+        $this->blackListCustomerEmail($customer['emailAddress']);
+        $this->addNoteToCustomer('Email Blacklisted');
+        $this->blackListCustomerPhone($customer['phoneNumber']);
+        $this->addNoteToCustomer('Phone Blacklisted');
         //  $this->blackListCustomer();
         //  $this->addNoteToCustomer('Customer Blacklisted');
         //  dd($customer);
@@ -128,14 +128,14 @@ class ProcessAlert implements ShouldQueue
             'name' => CrmActionEnum::getActionName(CrmActionEnum::FindTransaction),
         ]);
         try {
-            $response = Http::post($this->url . 'transactions/query/', [
+            $response = Http::withQueryParameters([
                 'loginId' => env('KONNEKTIVE_LOGIN_ID'),
                 'password' => env('KONNEKTIVE_PASSWORD'),
                 'txType' => 'SALE',
                 'responseType' => 'SUCCESS',
                 'cardLast4' => $alert->card_last4,
                 'cardBin' => $alert->card_bin,
-            ]);
+            ])->post($this->url . 'transactions/query/');
             if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
                 $message = $response->json()['message'];
                 $data = collect($message['data']);
@@ -184,11 +184,13 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::FindGateway,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::FindGateway),
         ]);
-        $response = Http::post($this->url . 'merchant/query/', [
+
+        $response = Http::withQueryParameters([
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'billerId' => $merchantId,
-        ]);
+        ])->post($this->url . 'merchant/query/');
+
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $message = $response->json()['message'];
             $data = collect($message);
@@ -216,11 +218,15 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::GetCustomerData,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerData),
         ]);
-        $response = Http::post($this->url . 'customer/query/', [
-            'loginId' => env('KONNEKTIVE_LOGIN_ID'),
-            'password' => env('KONNEKTIVE_PASSWORD'),
-            'customerId' => $customer_id,
-        ]);
+
+        $response = Http::withQueryParameters(
+            [
+                'loginId' => env('KONNEKTIVE_LOGIN_ID'),
+                'password' => env('KONNEKTIVE_PASSWORD'),
+                'customerId' => $customer_id,
+            ]
+        )->post($this->url . 'customer/query/');
+
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $message = $response->json()['message'];
             $data = collect($message['data'][0]);
@@ -246,13 +252,16 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomerEmail,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerEmail),
         ]);
-        $response = Http::post($this->url . 'customer/blacklist/', [
-            'loginId' => env('KONNEKTIVE_LOGIN_ID'),
-            'password' => env('KONNEKTIVE_PASSWORD'),
-            'blacklistType' => 'emailAddress',
-            'customerId' => $this->transaction->customerId,
-            'emailAddress' => $email,
-        ]);
+
+        $response = Http::withQueryParameters(
+            [
+                'loginId' => env('KONNEKTIVE_LOGIN_ID'),
+                'password' => env('KONNEKTIVE_PASSWORD'),
+                'blacklistType' => 'emailAddress',
+                'customerId' => $this->transaction->customerId,
+                'emailAddress' => $email,
+            ]
+        )->post($this->url . 'customer/blacklist/');
 
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $action->data = $response->json();
@@ -277,12 +286,14 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::BlacklistCustomerPhone,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::BlacklistCustomerPhone),
         ]);
-        $response = Http::post($this->url . 'customer/blacklist/', [
-            'loginId' => env('KONNEKTIVE_LOGIN_ID'),
-            'password' => env('KONNEKTIVE_PASSWORD'),
-            'blacklistType' => 'phoneNumber',
-            'phoneNumber' => $phone,
-        ]);
+        $response = Http::withQueryParameters(
+            [
+                'loginId' => env('KONNEKTIVE_LOGIN_ID'),
+                'password' => env('KONNEKTIVE_PASSWORD'),
+                'blacklistType' => 'phoneNumber',
+                'phoneNumber' => $phone,
+            ]
+        )->post($this->url . 'customer/blacklist/');
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $action->data = $response->json();
             $action->result = 'Phone Blacklisted';
@@ -347,12 +358,14 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::CancelFulfillments,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::CancelFulfillments), // 'Cancel Fulfillments
         ]);
-        $response = Http::post($this->url . 'fulfillment/update/', [
+
+        $response = Http::withQueryParameters([
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'orderId' => $this->transaction->orderId,
             'fulfillmentStatus' => 'CANCELLED',
-        ]);
+        ])->post($this->url . 'fulfillment/update/');
+
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $action->data = $response->json();
             $action->result = 'Fulfillments Cancelled';
@@ -377,13 +390,15 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::RefundTransactions,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::RefundTransactions), // 'Refund Transactions',
         ]);
-        $response = Http::post($this->url . 'transactions/refund/', [
+
+        $response = Http::withQueryParameters([
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'transactionId' => $this->transaction->transactionId,
             'fullRefund' => true,
             'refundReason' => "Fraudulent Transaction",
-        ]);
+        ])->post($this->url . 'transactions/refund/');
+
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $action->data = $response->json();
             $action->result = 'Transaction Refunded Successfully';
@@ -407,12 +422,14 @@ class ProcessAlert implements ShouldQueue
             'code' => CrmActionEnum::GetCustomerHistory,
             'name' => CrmActionEnum::getActionName(CrmActionEnum::GetCustomerHistory), // 'Get Customer History',
         ]);
-        $response = Http::post($this->url . 'customer/history/', [
+
+        $response = Http::withQueryParameters([
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->customerId,
             'startDate' => Carbon::now()->subDays(2)->toDateString(),
-        ]);
+        ])->post($this->url . 'customer/history/');
+
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $message = $response->json()['message'];
             $data = collect($message['data']);
@@ -460,12 +477,14 @@ class ProcessAlert implements ShouldQueue
             'name' => CrmActionEnum::getActionName(CrmActionEnum::AddNoteToCustomer),
             'code' => CrmActionEnum::AddNoteToCustomer,
         ]);
-        $response = Http::post($this->url . 'customer/addnote/', [
+
+        $response = Http::withQueryParameters([
             'loginId' => env('KONNEKTIVE_LOGIN_ID'),
             'password' => env('KONNEKTIVE_PASSWORD'),
             'customerId' => $this->transaction->customerId,
             'note' => $note ?? $this->generateNoteMessage(),
-        ]);
+        ])->post($this->url . 'customer/addnote/');
+
         if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
             $action->data = $response->json();
             $action->result = 'Note Added';
