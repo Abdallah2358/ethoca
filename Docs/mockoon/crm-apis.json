@@ -113,7 +113,7 @@
           "sendFileAsBody": false,
           "rules": [
             {
-              "target": "body",
+              "target": "query",
               "modifier": ".blacklistType",
               "value": "emailAddress",
               "invert": false,
