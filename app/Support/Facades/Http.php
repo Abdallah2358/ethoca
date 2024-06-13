@@ -21,8 +21,6 @@ class Http extends \Illuminate\Support\Facades\Http
     public static function withQueryParameters($parameters)
     {
         if (env('APP_ENV') === 'local') {
-            dd(env('APP_ENV'));
-            dd($parameters);
             return static::withOptions(config('http_client.default'))->withQueryParameters($parameters);
         }
         // dd(env('APP_ENV'));
