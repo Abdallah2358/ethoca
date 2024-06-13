@@ -43,6 +43,31 @@ class CrmActionEnum
                 return 'Unknown';
         }
     }
-
+    public static function getActionPath($action)
+    {
+        switch ($action) {
+            case self::AddNoteToCustomer:
+                return 'customer/addnote/';
+            case self::FindTransaction:
+                return 'transactions/query/';
+            case self::FindGateway:
+                return 'merchant/query/';
+            case self::GetCustomerData:
+                return 'customer/query/';
+            case self::BlacklistCustomerEmail:
+            case self::BlacklistCustomerPhone:
+            case self::BlacklistCustomer:
+                return 'customer/blacklist/';
+            case self::CancelFulfillments:
+                return 'fulfillment/update/';
+            case self::RefundTransactions:
+                return 'transactions/refund/';
+            case self::GetCustomerHistory:
+                return 'customer/history/';
+            case self::ConfirmFulfillmentCancel:
+            default:
+                return '';
+        }
+    }
 
 }
