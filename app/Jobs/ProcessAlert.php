@@ -15,7 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Http;
+use App\Support\Facades\Http;
 use Illuminate\Support\Collection;
 
 class ProcessAlert implements ShouldQueue
@@ -32,6 +32,7 @@ class ProcessAlert implements ShouldQueue
     ) {
         $this->url = env('KONNEKTIVE_API_URL', 'localhost:3000/');
     }
+
 
     /**
      * Execute the job.
@@ -135,22 +136,41 @@ class ProcessAlert implements ShouldQueue
                 'responseType' => 'SUCCESS',
                 'cardLast4' => $alert->card_last4,
                 'cardBin' => $alert->card_bin,
-            ])->post($this->url . 'transactions/query/');
-            if ($response->successful() && $response->json()['result'] == 'SUCCESS') {
-                $message = $response->json()['message'];
-                $data = collect($message['data']);
-                $action->data = $data->toJson();
-                $action->result = 'Found' . $message['totalResults'] . ' transactions';
-                $action->save();
-                if ($data->count() > 1) {
-                    return collect($data->sortBy(function ($e) use ($alert) {
-                        $date = Carbon::parse($e['dateCreated']);
-                        $targetDate = Carbon::parse($alert->transaction_timestamp);
-                        return $date->diffInDays($targetDate);
-                    })->first());
+                'startDate' => Carbon::parse($alert->transaction_timestamp)->subDays(1)->format('m/d/Y'),
+                'endDate' => Carbon::now()->format('m/d/Y'),
+            ])->post(env('KONNEKTIVE_API_URL') . 'transactions/query/');
+            // dd($response->json());
+            if ($response->successful()) {
+                $resData = $response->json();
+                if ($resData['result'] == 'SUCCESS') {
+                    $message = $resData['message'];
+                    $data = collect($message['data']);
+                    $action->data = $data->toJson();
+                    $action->status = 'success';
+                    $action->result = 'Found' . $message['totalResults'] . ' transactions';
+                    if ($data->count() > 1) {
+                        return collect($data->sortBy(function ($e) use ($alert) {
+                            $date = Carbon::parse($e['dateCreated']);
+                            $targetDate = Carbon::parse($alert->transaction_timestamp);
+                            return $date->diffInDays($targetDate);
+                        })->first());
+                    }
+                    return collect($data[0]);
+                } elseif ($resData['result'] == 'ERROR') {
+                    $action->status = 'error';
+                    $action->result = $resData['message'];
+                    Error::create([
+                        'model' => CrmAction::class,
+                        'model_id' => $action->id,
+                        'ethoca_id' => $alert->ethoca_id,
+                        'code' => $response->status(),
+                        'description' => $resData['message'],
+                        'data' => json_encode($response->json()),
+                    ]);
                 }
-                return collect($data[0]);
             } else {
+                $action->status = 'error';
+                $action->result = 'Failed to Connect to Konnektive';
                 Error::create([
                     'model' => CrmAction::class,
                     'model_id' => $action->id,
@@ -161,19 +181,23 @@ class ProcessAlert implements ShouldQueue
                 ]);
             }
         } catch (\Throwable $th) {
+            $action->status = 'error';
+            $action->result = 'Failed to Connect to Konnektive due to Internal Server Error';
             Error::create([
                 'model' => CrmAction::class,
                 'model_id' => $action->id,
                 'ethoca_id' => $alert->ethoca_id,
                 'code' => 500,
-                'description' => "Failed to Connect to Konnektive",
+                'description' => "Failed to Connect to Konnektive due to Internal Server Error",
                 'exception' => $th,
             ]);
-            dd($th);
+            $action->save();
+            #Todo : Add a way to retry the failed action
+            #Todo : Add a way to notify the user of the failed action
             throw $th;
+        }finally{
+            $action->save();
         }
-
-
         return false;
     }
 
