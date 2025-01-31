@@ -18,3 +18,4 @@ yarn-error.log
 /.idea
 /.vscode
 database/seeders/raw_data.csv
+git-filter-repo.py
